@@ -765,6 +765,14 @@ export default function Chat() {
                   animate={{ width: `${((onboardingStep - 1) / 3) * 100}%` }}
                 />
               </div>
+              {onboardingStep > 2 && (
+                <button
+                  onClick={() => setOnboardingStep(onboardingStep - 1)}
+                  className="absolute top-4 left-4 p-2 rounded-full hover:bg-slate-50 transition text-slate-400 hover:text-slate-600"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+              )}
 
               <button
                 onClick={() => setShowOnboarding(false)}
@@ -827,9 +835,15 @@ export default function Chat() {
                         ))}
                       </div>
                       <div className="flex gap-3">
-                         <button
+                        <button
                           onClick={() => setOnboardingStep(3)}
-                          className="w-full py-3 bg-sky-600 text-white rounded-xl font-bold text-base hover:bg-sky-700 transition disabled:opacity-50"
+                          className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-base hover:bg-slate-200 transition"
+                        >
+                          Skip
+                        </button>
+                        <button
+                          onClick={() => setOnboardingStep(3)}
+                          className="flex-[2] py-3 bg-sky-600 text-white rounded-xl font-bold text-base hover:bg-sky-700 transition disabled:opacity-50"
                           disabled={!onboardingData.destination}
                         >
                           Next
@@ -883,10 +897,10 @@ export default function Chat() {
                       />
                       <div className="flex gap-3">
                         <button
-                          onClick={() => setOnboardingStep(2)}
+                          onClick={() => setOnboardingStep(4)}
                           className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-base hover:bg-slate-200 transition"
                         >
-                          Back
+                          Skip
                         </button>
                         <button
                           onClick={() => setOnboardingStep(4)}
@@ -998,10 +1012,10 @@ export default function Chat() {
 
                       <div className="flex gap-3 pt-1">
                         <button
-                          onClick={() => setOnboardingStep(3)}
+                          onClick={() => completeOnboarding(true)}
                           className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-base hover:bg-slate-200 transition"
                         >
-                          Back
+                          Skip & Chat
                         </button>
                         <button
                           onClick={() => completeOnboarding(false)}
