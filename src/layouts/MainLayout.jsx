@@ -16,24 +16,24 @@ const MainLayout = () => {
     <div className="h-screen flex flex-col bg-slate-50 overflow-hidden">
       {/* HEADER (SINGLE SOURCE OF TRUTH) */}
       <header className="border-b border-slate-100 bg-white">
-        <div className="w-full px-8 py-3 flex items-center">
+        <div className="w-full px-4 md:px-8 py-3 flex items-center justify-between">
 
           {/* LEFT — BRAND */}
           <div className="flex items-center shrink-0 cursor-pointer group">
             <div className="flex flex-col leading-none">
               {/* THE */}
-              <span className="text-[10px] font-bold text-slate-400 tracking-[0.3em] mb-[-2px] ml-0.5 transition-colors group-hover:text-sky-600">
+              <span className="text-[8px] md:text-[10px] font-bold text-slate-400 tracking-[0.3em] mb-[-2px] ml-0.5 transition-colors group-hover:text-sky-600">
                 THE
               </span>
 
               {/* MAIN BRAND: TRAV STORY */}
               <div className="flex items-center">
-                <span className="text-3xl font-black tracking-tighter text-sky-600">
+                <span className="text-xl md:text-3xl font-black tracking-tighter text-sky-600">
                   TRA
                 </span>
 
                 {/* CONSTRUCTED V (LEFT CURVE + PLANE RIGHT) */}
-                <div className="relative flex items-center justify-center w-14 h-10.5 -mx-4 translate-y-0.5 group-hover:scale-105 transition-transform duration-300">
+                <div className="relative flex items-center justify-center w-10 h-8 md:w-14 md:h-[42px] -mx-3 md:-mx-4 translate-y-0.5 group-hover:scale-105 transition-transform duration-300">
                   {/* LEFT CURVE (VCurve.png) - MATCHING SKY BLUE */}
                   <img
                     src={vcurve}
@@ -48,7 +48,7 @@ const MainLayout = () => {
                   />
                 </div>
 
-                <span className="text-3xl font-black tracking-tighter text-slate-900 ml-0">
+                <span className="text-xl md:text-3xl font-black tracking-tighter text-slate-900 ml-0">
                   STORY
                 </span>
               </div>
@@ -56,8 +56,8 @@ const MainLayout = () => {
           </div>
 
           {/* CENTER — NAVIGATION */}
-          <nav className="flex-1 flex justify-center">
-            <ul className="flex items-center gap-10 text-m font-semibold">
+          <nav className="flex-1 overflow-x-auto no-scrollbar mx-2 md:mx-4 flex justify-center">
+            <ul className="flex items-center gap-4 md:gap-10 text-sm md:text-base font-semibold whitespace-nowrap px-1">
               {[
                 { to: "/chat", label: "Chat" },
                 { to: "/planner", label: "Planner" },
@@ -83,14 +83,14 @@ const MainLayout = () => {
           </nav>
 
           {/* RIGHT — PROFILE (Simplified for MVP) */}
-          <NavLink to="/profile" className="flex items-center gap-4 shrink-0 hover:opacity-80 transition-opacity">
+          <NavLink to="/profile" className="flex items-center gap-2 md:gap-4 shrink-0 hover:opacity-80 transition-opacity">
             <div className="hidden md:block text-right">
               <p className="text-sm font-bold text-slate-900 leading-tight">
                 Guest Traveler
               </p>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">View Profile</p>
             </div>
-            <div className="h-10 w-10 rounded-xl bg-slate-100 overflow-hidden ring-2 ring-white shadow-sm">
+            <div className="h-8 w-8 md:h-10 md:w-10 rounded-xl bg-slate-100 overflow-hidden ring-2 ring-white shadow-sm shrink-0">
               <img
                 src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100&auto=format&fit=crop"
                 alt="Profile"
@@ -108,8 +108,8 @@ const MainLayout = () => {
       <main
         className={
           isFullWidthPage
-            ? "flex-1 w-full px-0 pb-0 pt-0 overflow-y-auto no-scrollbar"
-            : "flex-1 container mx-auto max-w-5xl px-6 pt-6"
+            ? "flex-1 w-full px-0 pb-0 pt-0 overflow-y-auto overflow-x-hidden no-scrollbar"
+            : "flex-1 container mx-auto max-w-5xl px-4 md:px-6 pt-6"
         }
       >
         <Outlet />

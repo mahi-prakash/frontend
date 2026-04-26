@@ -1039,14 +1039,13 @@ export default function Chat() {
 
       <header className="h-8 flex items-center" />
 
-      <main className="flex-1 w-full px-20">
+      <main className="flex-1 w-full px-4 md:px-8 lg:px-20 pb-20 pt-4 lg:pt-0">
         <div
-          className="h-full grid gap-8"
-          style={{ gridTemplateColumns: "64% 36%" }}
+          className="h-full flex flex-col lg:grid gap-6 lg:gap-8 lg:grid-cols-[minmax(0,62%)_minmax(0,36%)] xl:grid-cols-[minmax(0,64%)_minmax(0,36%)]"
         >
           {/* ══════════ CHAT PANEL ══════════ */}
           <section className="relative z-20">
-            <div className="h-[570px] rounded-[32px] bg-white shadow-2xl border border-slate-100 flex flex-col overflow-visible relative">
+            <div className="h-[500px] lg:h-[570px] rounded-[32px] bg-white shadow-2xl border border-slate-100 flex flex-col overflow-visible relative">
               {/* Header */}
               <div className="px-8 py-6 flex items-center justify-between relative z-30">
                 <div className="flex items-center gap-3">
@@ -1091,11 +1090,11 @@ export default function Chat() {
                 <div className="flex items-center gap-2">
                   {/* Trip selector */}
                   {/* Current Trip Display */}
-                  <div className="flex items-center gap-2 px-5 py-2 rounded-full bg-white border border-slate-200 text-slate-800 text-sm font-semibold shadow-sm shadow-slate-100">
-                    <span className="text-slate-400 font-medium mr-1">
+                  <div className="hidden sm:flex items-center gap-2 px-3 lg:px-5 py-2 rounded-full bg-white border border-slate-200 text-slate-800 text-xs md:text-sm font-semibold shadow-sm shadow-slate-100">
+                    <span className="text-slate-400 font-medium mr-1 hidden lg:inline">
                       Planning:
                     </span>
-                    <span className="truncate max-w-[120px]">
+                    <span className="truncate max-w-[80px] lg:max-w-[120px]">
                       {tripMeta?.title || tripMeta?.name || "New Trip"}
                     </span>
                   </div>
@@ -1103,7 +1102,7 @@ export default function Chat() {
                   {/* New trip */}
                   <button
                     onClick={handleNewChat}
-                    className="text-sm font-semibold border border-sky-600 text-white bg-sky-600 hover:bg-sky-700 px-4 py-1.5 rounded-full transition shadow-md shadow-sky-100"
+                    className="text-xs lg:text-sm font-semibold border border-sky-600 text-white bg-sky-600 hover:bg-sky-700 px-3 lg:px-4 py-1.5 rounded-full transition shadow-md shadow-sky-100 whitespace-nowrap"
                   >
                     + New Trip
                   </button>
@@ -1187,8 +1186,8 @@ export default function Chat() {
           </section>
 
           {/* ══════════ RIGHT PANEL ══════════ */}
-          <aside>
-            <div className="h-[570px] rounded-[32px] bg-white shadow-2xl border border-slate-100 flex flex-col relative">
+          <aside className="mt-4 lg:mt-0">
+            <div className="h-[500px] lg:h-[570px] rounded-[32px] bg-white shadow-2xl border border-slate-100 flex flex-col relative">
               {/* Tabs */}
               <div className="px-11 pt-6 flex justify-between">
                 <div className="flex gap-2 text-s font-semibold">
