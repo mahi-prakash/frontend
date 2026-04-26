@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Outlet, useLocation, NavLink } from "react-router-dom";
 import { useUser } from "../context/UserContext";
-import { LogOut, ChevronDown } from "lucide-react";
+import { LogOut, ChevronDown, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import plane from "../layouts/plane.png";
 import vcurve from "../layouts/VCurve.png";
@@ -11,6 +11,15 @@ const MainLayout = () => {
   const location = useLocation();
   const isFullWidthPage = location.pathname === "/chat" || location.pathname.startsWith("/planner") || location.pathname === "/profile" || location.pathname === "/bookings" || location.pathname === "/explore";
   const { user, logout } = useUser();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const navItems = [
+    { to: "/chat", label: "Chat" },
+    { to: "/planner", label: "Planner" },
+    { to: "/bookings", label: "Bookings" },
+    { to: "/explore", label: "Explore" },
+    { to: "/profile", label: "Profile" },
+  ];
 
   return (
     <div className="h-screen flex flex-col bg-slate-50 overflow-hidden">
@@ -19,7 +28,7 @@ const MainLayout = () => {
         <div className="w-full px-8 py-3 flex items-center">
 
           {/* LEFT — BRAND */}
-          <div className="flex items-center shrink-0 cursor-pointer group">
+          <NavLink to="/" className="flex items-center shrink-0 cursor-pointer group mr-auto lg:mr-0">
             <div className="flex flex-col leading-none">
               {/* THE */}
               <span className="text-[10px] font-bold text-slate-400 tracking-[0.3em] mb-[-2px] ml-0.5 transition-colors group-hover:text-sky-600">
@@ -28,12 +37,12 @@ const MainLayout = () => {
 
               {/* MAIN BRAND: TRAV STORY */}
               <div className="flex items-center">
-                <span className="text-3xl font-black tracking-tighter text-sky-600">
+                <span className="text-2xl sm:text-3xl font-black tracking-tighter text-sky-600">
                   TRA
                 </span>
 
                 {/* CONSTRUCTED V (LEFT CURVE + PLANE RIGHT) */}
-                <div className="relative flex items-center justify-center w-14 h-10.5 -mx-4 translate-y-0.5 group-hover:scale-105 transition-transform duration-300">
+                <div className="relative flex items-center justify-center w-10 sm:w-14 h-8 sm:h-10.5 -mx-3 sm:-mx-4 translate-y-0.5 group-hover:scale-105 transition-transform duration-300">
                   {/* LEFT CURVE (VCurve.png) - MATCHING SKY BLUE */}
                   <img
                     src={vcurve}
@@ -48,23 +57,17 @@ const MainLayout = () => {
                   />
                 </div>
 
-                <span className="text-3xl font-black tracking-tighter text-slate-900 ml-0">
+                <span className="text-2xl sm:text-3xl font-black tracking-tighter text-slate-900 ml-0">
                   STORY
                 </span>
               </div>
             </div>
-          </div>
+          </NavLink>
 
-          {/* CENTER — NAVIGATION */}
-          <nav className="flex-1 flex justify-center">
+          {/* CENTER — NAVIGATION (Desktop) */}
+          <nav className="hidden lg:flex flex-1 justify-center">
             <ul className="flex items-center gap-10 text-m font-semibold">
-              {[
-                { to: "/chat", label: "Chat" },
-                { to: "/planner", label: "Planner" },
-                { to: "/bookings", label: "Bookings" },
-                { to: "/explore", label: "Explore" },
-                { to: "/profile", label: "Profile" },
-              ].map((item) => (
+              {navItems.map((item) => (
                 <li key={item.to}>
                   <NavLink
                     to={item.to}
@@ -82,26 +85,99 @@ const MainLayout = () => {
             </ul>
           </nav>
 
-          {/* RIGHT — PROFILE (Simplified for MVP) */}
-          <NavLink to="/profile" className="flex items-center gap-4 shrink-0 hover:opacity-80 transition-opacity">
-            <div className="hidden md:block text-right">
-              <p className="text-sm font-bold text-slate-900 leading-tight">
-                Guest Traveler
-              </p>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">View Profile</p>
-            </div>
-            <div className="h-10 w-10 rounded-xl bg-slate-100 overflow-hidden ring-2 ring-white shadow-sm">
-              <img
-                src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100&auto=format&fit=crop"
-                alt="Profile"
-                className="h-full w-full object-cover"
-              />
-            </div>
-          </NavLink>
+          {/* RIGHT — PROFILE & MOBILE MENU TOGGLE */}
+          <div className="flex items-center gap-4 shrink-0">
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="lg:hidden p-2 rounded-xl bg-slate-50 text-slate-600 hover:bg-sky-50 hover:text-sky-600 transition-all border border-slate-100 shadow-sm"
+            >
+              {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
 
-
-
+            <NavLink to="/profile" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
+              <div className="hidden xl:block text-right">
+                <p className="text-sm font-bold text-slate-900 leading-tight">
+                  Guest Traveler
+                </p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">View Profile</p>
+              </div>
+              <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-slate-100 overflow-hidden ring-2 ring-white shadow-sm">
+                <img
+                  src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100&auto=format&fit=crop"
+                  alt="Profile"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            </NavLink>
+          </div>
         </div>
+
+        {/* MOBILE SHELF (MENU) */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsMenuOpen(false)}
+                className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm lg:hidden"
+              />
+              <motion.div
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%" }}
+                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                className="fixed top-0 right-0 bottom-0 w-[280px] z-[101] bg-white shadow-2xl lg:hidden flex flex-col p-6"
+              >
+                <div className="flex items-center justify-between mb-10">
+                  <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Menu</span>
+                  <button onClick={() => setIsMenuOpen(false)} className="p-2 text-slate-400 hover:text-slate-600">
+                    <X size={24} />
+                  </button>
+                </div>
+
+                <nav>
+                  <ul className="space-y-4">
+                    {navItems.map((item) => (
+                      <li key={item.to}>
+                        <NavLink
+                          to={item.to}
+                          onClick={() => setIsMenuOpen(false)}
+                          className={({ isActive }) =>
+                            `flex items-center gap-4 p-4 rounded-2xl text-base font-bold transition-all ${isActive
+                              ? "bg-sky-50 text-sky-600 shadow-sm border border-sky-100"
+                              : "text-slate-600 hover:bg-slate-50"
+                            }`
+                          }
+                        >
+                          {item.label}
+                        </NavLink>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+
+                <div className="mt-auto pt-6 border-t border-slate-100">
+                  <div className="flex items-center gap-3 p-2">
+                    <div className="h-10 w-10 rounded-xl bg-slate-100 overflow-hidden ring-2 ring-white shadow-sm shrink-0">
+                      <img
+                        src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100&auto=format&fit=crop"
+                        alt="Profile"
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-slate-900 leading-tight">Guest Traveler</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Signed in</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* MAIN CONTENT */}
