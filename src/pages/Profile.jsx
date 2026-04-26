@@ -4,6 +4,7 @@ import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { Plane, Bookmark, Award, Globe, Pen, Camera, Globe2, MapPin, Calendar, ClipboardList, Plus, Heart, Settings, ShieldCheck, ChevronRight, BookOpen, Sun, Utensils, Compass, Send } from "lucide-react";
 import { useUser } from "../context/UserContext";
 import { GOOGLE_MAPS_API_KEY } from "../utils/googleMaps";
+import Planner from './Planner';
 
 
 const LIBRARIES = ['places'];
@@ -970,7 +971,7 @@ const ProfileDashboard = ({ user }) => {
                 {/* Row 1, Col 2 to 3 */}
                 <section className="card upcoming-trip-card flex-col-card">
                   <div className="card-header-flex">
-                    <h2 className="section-title">Upcoming Journey</h2>
+                    <h3 className="section-title">Upcoming Journey</h3>
                     <button className="btn-link">View Itinerary <i className="fa-solid fa-arrow-right ml-1"></i></button>
                   </div>
                   {user.upcomingTrips.map(trip => (
@@ -987,7 +988,7 @@ const ProfileDashboard = ({ user }) => {
                           <span className="trip-countdown"><i className="fa-regular fa-clock"></i> In {trip.daysUntil} Days</span>
                         </div>
                         <h3>{trip.destination}</h3>
-                        <p><i className="fa-regular fa-calendar text-blue-light"></i> {trip.date}</p>
+                        <p><i className="fa-regular fa-calendar text-sky-700"></i> {trip.date}</p>
                       </div>
                     </div>
                   ))}
@@ -1181,7 +1182,7 @@ const ProfileWrapper = () => {
     avatarImage: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=300&auto=format&fit=crop",
     profileName: user?.name || "Guest Explorer",
     location: "Global Nomad",
-    joinedDate: "Joined April 2024",
+    joinedDate: "Joined April 2026",
     email: user?.email || "guest@example.com",
     vibe: user?.personalityTag || "Modern Nomad",
     stats: {

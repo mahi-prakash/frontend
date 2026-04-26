@@ -1244,7 +1244,7 @@ export default function Chat() {
                     </div>
 
                     {/* Itinerary cards */}
-                    <div className="rounded-3xl bg-white shadow-2xl px-6 py-2 space-y-4 max-h-[48vh] overflow-y-auto no-scrollbar mb-4">
+                    <div className="rounded-3xl bg-white shadow-2xl px-6 py-6 space-y-4 max-h-[48vh] overflow-y-auto no-scrollbar mb-4">
                       {!activeItinerary ? (
                         <div className="flex flex-col items-center justify-center py-12 text-center">
                           <Sparkles className="text-sky-300 w-8 h-8 mb-3" />
@@ -1272,9 +1272,9 @@ export default function Chat() {
                               <div className="flex items-center gap-3 mb-4">
                                 <div className="h-px flex-1 bg-slate-100" />
                                 <div className="bg-slate-50 border border-slate-100 px-4 py-1.5 rounded-full flex items-center gap-2">
-
-                                  <span className="text-[11px] font-bold text-sky-600">
-                                    {day.date}
+                                  {/*add the day 1 or 2 thing here...*/}
+                                  <span className="text-[13px] font-bold text-sky-600">
+                                    {"Day " + day.day}
                                   </span>
 
                                 </div>
@@ -1329,7 +1329,7 @@ export default function Chat() {
                                         className="relative flex items-center gap-4 w-full rounded-2xl bg-white px-6 py-3 shadow-xl border border-slate-100 hover:shadow-2xl transition-all"
                                       >
                                         <div className="flex-1">
-                                          <div className="flex items-center gap-2 text-[10px] text-sky-600 font-bold uppercase tracking-wide">
+                                          <div className="flex items-center gap-2 text-[13px] text-sky-600 font-bold uppercase tracking-wide">
                                             <Icon size={12} /> {activity.time} •{" "}
                                             {activity.type}
                                           </div>
@@ -1365,7 +1365,7 @@ export default function Chat() {
                       whileTap={{ scale: 0.98 }}
                       onClick={() => navigate("/bookings")}
                       disabled={!activeItinerary}
-                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-sky-600 to-sky-500 text-white font-bold text-sm shadow-xl shadow-sky-100 flex items-center justify-center gap-3 hover:shadow-2xl hover:shadow-sky-300 transition-all duration-300 disabled:opacity-40"
+                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-sky-700 to-sky-500 text-white font-bold text-sm shadow-xl shadow-sky-100 flex items-center justify-center gap-3 hover:shadow-2xl hover:shadow-sky-300 transition-all duration-300 disabled:opacity-40"
                     >
                       <Sparkles size={18} />
                       Finalize & Show Bookings
