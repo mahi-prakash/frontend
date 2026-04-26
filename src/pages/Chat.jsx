@@ -373,7 +373,7 @@ export default function Chat() {
           id: Date.now() + 1,
           from: "bot",
           text: `Hey ${userName}! Where do you wanna go? 🌍`,
-          options: ["Surprise me ✨", "Beach 🏖️", "Mountains ⛰️", "City 🏙️", "Adventure 🧗", "Cultural 🏛️", "Nature 🌿", "Party 🎉", "Budget 💸"],
+          options: ["Beach 🏖️", "Mountains ⛰️", "City 🏙️", "Adventure 🧗", "Cultural 🏛️", "Nature 🌿", "Party 🎉", "Budget 💸"],
         };
 
         setMessages(tripId, (prev) => [...prev, botMessage]);
@@ -406,7 +406,7 @@ export default function Chat() {
 
       botReply = {
         text: `Nice choice, ${userName}! ${destination} is amazing. 🌍 How many days are you planning to stay?`,
-        options: ["3", "5", "7", "Surprise me ✨"],
+        options: ["3", "5", "7", "10"],
       };
     } else if (currentStage === "ASK_DAYS" && !collected.days) {
       let days = text;
@@ -422,7 +422,7 @@ export default function Chat() {
 
       botReply = {
         text: "And what's the budget looking like? 💸",
-        options: ["Budget 💸", "Moderate 💳", "Luxury 💎", "Surprise me ✨"],
+        options: ["Budget 💸", "Moderate 💳", "Luxury 💎"],
       };
     } else if (currentStage === "ASK_BUDGET" && !collected.budget) {
       let budget = text;
@@ -631,15 +631,15 @@ export default function Chat() {
       if (!collected.destination) {
         aiStage = "ASK_DESTINATION";
         firstQuestion = `Hey ${userName}! I've set up your trip. First things first—where are we headed? 🌍`;
-        options = ["Surprise me ✨", "Beach 🏖️", "Mountains ⛰️", "City 🏙️", "Adventure 🧗", "Cultural 🏛️", "Nature 🌿", "Party 🎉", "Budget 💸"];
+        options = ["Beach 🏖️", "Mountains ⛰️", "City 🏙️", "Adventure 🧗", "Cultural 🏛️", "Nature 🌿", "Party 🎉", "Budget 💸"];
       } else if (!collected.days) {
         aiStage = "ASK_DAYS";
         firstQuestion = `Love it, ${destination} is amazing! 🌍 How many days should I plan for?`;
-        options = ["3", "5", "7", "Surprise me ✨"];
+        options = ["3", "5", "7", "10"];
       } else if (!collected.budget) {
         aiStage = "ASK_BUDGET";
         firstQuestion = `Got it! And what's the budget looking like for ${destination}? 💸`;
-        options = ["Budget 💸", "Moderate 💳", "Luxury 💎", "Surprise me ✨"];
+        options = ["Budget 💸", "Moderate 💳", "Luxury 💎"];
       } else {
         // Everything finalized in Modal
         aiStage = "GENERATING";
@@ -810,7 +810,6 @@ export default function Chat() {
 
                       <div className="flex flex-wrap gap-2 justify-center">
                         {[
-                          { label: "Surprise me ✨", val: "Surprise me" },
                           { label: "Beach 🏖️", val: "Beach" },
                           { label: "Mountains ⛰️", val: "Mountains" },
                           { label: "City 🏙️", val: "City" },
