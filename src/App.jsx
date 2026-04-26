@@ -15,6 +15,7 @@ const Chat = lazy(() => import("./pages/Chat"));
 const Planner = lazy(() => import("./pages/Planner"));
 const Profile = lazy(() => import("./pages/Profile"));
 const Bookings = lazy(() => import("./pages/Bookings"));
+const ComingSoon = lazy(() => import("./pages/ComingSoon"));
 const MainLayout = lazy(() => import("./layouts/MainLayout"));
 
 const App = () => {
@@ -24,6 +25,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/quiz" element={<Quiz />} />
+          <Route path="/coming-soon" element={<ComingSoon />} />
           <Route element={<MainLayout />}>
             <Route path="/explore" element={<Explore />} />
             <Route path="/chat" element={<Chat />} />

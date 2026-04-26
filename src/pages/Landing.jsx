@@ -521,7 +521,7 @@ const Landing = () => {
       </section>
 
       {/* SECTION 3 – Stay in the loop */}
-      <section className="py-10 bg-slate-900 text-slate-100">
+      <section className="py-10 bg-gradient-to-b from-sky-50 to-slate-900 text-slate-100 pb-20">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="rounded-[32px] bg-gradient-to-br from-slate-900 via-slate-900 to-sky-900/40 border border-slate-700 shadow-[0_32px_80px_-40px_rgba(15,23,42,0.9)] px-6 md:px-10 py-6 md:py-8">
             <div className="grid md:grid-cols-[1.3fr,0.7fr] gap-6 items-center">
@@ -542,11 +542,11 @@ const Landing = () => {
                   <input
                     type="email"
                     placeholder="you@travelszn.com"
-                    className="flex-1 rounded-full bg-slate-800 border border-slate-600 px-4 py-2.5 text-sm md:text-base text-slate-100 placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-300"
+                    className="flex-1 rounded-full bg-slate-800 border border-slate-600 px-4 py-2.5 text-sm md:text-base text-slate-100 placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-300 cursor-text"
                   />
                   <button
                     type="submit"
-                    className="px-6 py-2.5 rounded-full bg-sky-600 hover:bg-sky-400 text-sm md:text-base font-semibold text-white shadow-lg shadow-sky-500/30 transition-colors"
+                    className="px-6 py-2.5 rounded-full bg-sky-600 hover:bg-sky-400 text-sm md:text-base font-semibold text-white shadow-lg shadow-sky-500/30 transition-colors cursor-pointer"
                   >
                     Count me in
                   </button>
@@ -558,22 +558,22 @@ const Landing = () => {
                   <p className="text-[11px] uppercase tracking-[0.2em] text-slate-400">
                     Contact
                   </p>
-                  <p className="mt-1 text-slate-200">hey@trap.travel</p>
+                  <a href="mailto:thetravstory.info@gmail.com" className="mt-1 text-slate-200 hover:text-sky-300 cursor-pointer block">thetravstory.info@gmail.com</a>
                 </div>
                 <div>
                   <p className="text-[11px] uppercase tracking-[0.2em] text-slate-400">
                     Social
                   </p>
                   <p className="mt-1 text-slate-200">
-                    Instagram · <span className="text-sky-300">@travixo</span>
+                    Instagram · <a href="https://www.instagram.com/the_travstory/?hl=en" target="_blank" rel="noopener noreferrer" className="text-sky-300 hover:text-sky-200 cursor-pointer">@the_travstory</a>
                   </p>
                 </div>
                 <div>
                   <p className="text-[11px] uppercase tracking-[0.2em] text-slate-400">
-                    Built from
+                    Links
                   </p>
                   <p className="mt-1 text-slate-200">
-                    Bengaluru · Lisbon · Seoul · wherever Wi‑Fi holds.
+                    <a href="https://linktr.ee/thetravstory?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGnK5gIG3dB3jku2H5VqxN1SWKAn3XdItanUcRv0rCYYozPulewSmr9wMl-900_aem_O67Sl_H5scMKleQoM7pbMg" target="_blank" rel="noopener noreferrer" className="hover:text-sky-300 cursor-pointer block">Linktree</a>
                   </p>
                 </div>
               </div>
@@ -582,9 +582,9 @@ const Landing = () => {
             <div className="mt-6 pt-3 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500">
               <p>© {new Date().getFullYear()} Trap. All rights reserved.</p>
               <div className="flex gap-4">
-                <button className="hover:text-slate-300">Privacy</button>
-                <button className="hover:text-slate-300">Terms</button>
-                <button className="hover:text-slate-300">Cookies</button>
+                <a href="/coming-soon" className="hover:text-slate-300 cursor-pointer">Privacy</a>
+                <a href="/coming-soon" className="hover:text-slate-300 cursor-pointer">Terms</a>
+                <a href="/coming-soon" className="hover:text-slate-300 cursor-pointer">Cookies</a>
               </div>
             </div>
           </div>
