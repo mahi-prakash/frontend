@@ -216,7 +216,7 @@ const ExperienceCarousel = () => {
         {experiences.map((exp) => (
           <div
             key={exp.city}
-            className="min-w-[300px] max-w-[340px] bg-white border border-slate-200 rounded-3xl shadow-xl shadow-slate-200/60 overflow-hidden flex flex-col"
+            className="min-w-[280px] sm:min-w-[300px] max-w-[340px] bg-white border border-slate-200 rounded-3xl shadow-xl shadow-slate-200/60 overflow-hidden flex flex-col"
           >
             <div className="h-44 w-full relative">
               <img
@@ -379,7 +379,7 @@ const Landing = () => {
       </header>
 
       {/* HERO */}
-      <section className="relative z-10 h-[calc(100vh-72px)] flex items-center">
+      <section className="relative z-10 min-h-[calc(100vh-72px)] py-12 lg:py-0 flex items-center overflow-hidden">
         <div className="pointer-events-none absolute -top-10 right-0 w-[360px] h-[360px] bg-gradient-to-tr from-sky-300/50 to-sky-500/40 blur-[90px] opacity-80" />
 
         <div className="container mx-auto px-6 flex flex-col lg:flex-row items-center gap-12">
@@ -412,14 +412,14 @@ const Landing = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="flex flex-wrap gap-4 pt-4"
+              className="flex flex-col sm:flex-row flex-wrap gap-4 pt-4 w-full sm:w-auto"
             >
               <Motion.button
                 onClick={handleGoToAuth}
                 onMouseMove={handleMouseMove}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative px-9 py-5 bg-slate-900 text-white rounded-full font-bold text-sm md:text-lg overflow-hidden shadow-xl shadow-slate-900/20 cursor-pointer"
+                className="group relative w-full sm:w-auto px-9 py-5 bg-slate-900 text-white rounded-full font-bold text-sm md:text-lg overflow-hidden shadow-xl shadow-slate-900/20 cursor-pointer flex items-center justify-center"
               >
                 <Motion.div
                   className="pointer-events-none absolute -inset-px rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -444,7 +444,7 @@ const Landing = () => {
                 onMouseMove={handleMouseMove}
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative px-8 py-4 bg-white text-slate-900 font-bold text-sm md:text-lg flex items-center gap-2 hover:bg-slate-50 border border-slate-200 shadow-sm rounded-full overflow-hidden cursor-pointer"
+                className="group relative w-full sm:w-auto px-8 py-4 bg-white text-slate-900 font-bold text-sm md:text-lg flex items-center justify-center gap-2 hover:bg-slate-50 border border-slate-200 shadow-sm rounded-full overflow-hidden cursor-pointer"
               >
                 <Motion.div
                   className="pointer-events-none absolute -inset-px rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -468,12 +468,15 @@ const Landing = () => {
 
           {/* Right hero visuals */}
           <Motion.div
-            initial={{ opacity: 0, x: 80 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.9 }}
-            className="hidden lg:flex lg:w-[70%] justify-end"
+            className="flex w-full lg:w-[70%] justify-center lg:justify-end mt-8 lg:mt-0"
           >
-            <div className="relative h-[650px] w-full max-w-4xl flex gap-4">
+            <div 
+              className="relative h-[380px] sm:h-[450px] lg:h-[650px] w-full max-w-4xl flex gap-3 md:gap-4 overflow-hidden rounded-[20px] lg:rounded-none"
+              style={{ maskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)' }}
+            >
               {[0, 1, 2, 3].map((colIndex) => {
                 const colImages = heroPlaces[colIndex];
                 const isEven = colIndex % 2 === 0;
@@ -482,7 +485,7 @@ const Landing = () => {
 
                   <div
                     key={colIndex}
-                    className="relative flex-1 overflow-hidden"
+                    className={`relative flex-1 overflow-hidden ${colIndex > 1 ? 'hidden md:block' : ''}`}
                   >
                     <Motion.div
                       initial={{ y: isEven ? "-50%" : "0%" }}
@@ -614,7 +617,7 @@ const Landing = () => {
       {/* SECTION – Ready to plan CTA */}
       <section className="py-16 bg-sky-50">
         <div className="container mx-auto px-6 max-w-4xl">
-          <div className="rounded-3xl border border-slate-200 bg-white shadow-[0_24px_60px_-40px_rgba(15,23,42,0.45)] px-6 md:px-10 py-8 md:py-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="rounded-3xl border border-slate-200 bg-white shadow-[0_24px_60px_-40px_rgba(15,23,42,0.45)] px-6 md:px-10 py-8 md:py-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
             <div>
               <p className="text-[11px] font-semibold tracking-[0.25em] uppercase text-sky-600">
                 READY FOR YOUR NEXT TRIP?
@@ -631,7 +634,7 @@ const Landing = () => {
             <button
               type="button"
               onClick={handleGoToAuth}
-              className="group relative px-9 py-4.5 bg-slate-900 text-white rounded-full font-bold text-xl md:text-lg overflow-hidden transition-transform hover:scale-115 active:scale-95 shadow-lg shadow-slate-900/20 whitespace-nowrap"
+              className="group relative w-full md:w-auto px-9 py-4 bg-slate-900 text-white rounded-full font-bold text-lg overflow-hidden transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-slate-900/20 whitespace-nowrap"
             >
               <span className="relative z-10 flex items-center justify-center gap-2 leading-none">
                 Start planning now
