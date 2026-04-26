@@ -373,7 +373,7 @@ export default function Chat() {
           id: Date.now() + 1,
           from: "bot",
           text: `Hey ${userName}! Where do you wanna go? 🌍`,
-          options: ["Surprise me ✨", "Beach 🏖️", "Mountains ⛰️", "City 🏙️"],
+          options: ["Surprise me ✨", "Beach 🏖️", "Mountains ⛰️", "City 🏙️", "Adventure 🧗", "Cultural 🏛️", "Nature 🌿", "Party 🎉", "Budget 💸"],
         };
 
         setMessages(tripId, (prev) => [...prev, botMessage]);
@@ -631,7 +631,7 @@ export default function Chat() {
       if (!collected.destination) {
         aiStage = "ASK_DESTINATION";
         firstQuestion = `Hey ${userName}! I've set up your trip. First things first—where are we headed? 🌍`;
-        options = ["Surprise me ✨", "Beach 🏖️", "Mountains ⛰️", "City 🏙️"];
+        options = ["Surprise me ✨", "Beach 🏖️", "Mountains ⛰️", "City 🏙️", "Adventure 🧗", "Cultural 🏛️", "Nature 🌿", "Party 🎉", "Budget 💸"];
       } else if (!collected.days) {
         aiStage = "ASK_DAYS";
         firstQuestion = `Love it, ${destination} is amazing! 🌍 How many days should I plan for?`;

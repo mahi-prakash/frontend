@@ -1028,8 +1028,8 @@ export default function Planner() {
                       </div>
                     ))}
 
-                    <div className="absolute inset-x-0 bottom-10 flex flex-col items-center gap-3">
-                      <div className="flex items-center gap-2 px-4 py-2 bg-sky-600 text-white rounded-full text-sm font-bold shadow-xl animate-bounce">
+                    <div className="absolute inset-x-0 bottom-60 flex flex-col items-center gap-3">
+                      <div className="flex items-center gap-2 px-4 py-3 bg-sky-600 text-white rounded-full text-sm font-bold shadow-xl animate-bounce">
                         <Sparkles size={14} className="animate-spin-slow" />
                         AI is crafting your journey...
                       </div>
