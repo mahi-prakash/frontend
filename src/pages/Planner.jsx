@@ -339,10 +339,7 @@ export default function Planner() {
     const cachedItinerary = (itineraryCache || {})[activeTripId];
     const sourceItinerary = dbItinerary || cachedItinerary;
 
-      hasDb: !!dbItinerary,
-      hasCache: !!cachedItinerary,
-      isSourceNull: sourceItinerary === null
-    });
+
 
     const hasDays = sourceItinerary?.days && (
       Array.isArray(sourceItinerary.days)
@@ -1484,8 +1481,7 @@ export default function Planner() {
 
                         {/* 3. Numbered Markers */}
                         {(() => {
-                          if (mapMarkers.length > 0) {
-                          }
+
                           return mapMarkers.map((marker) => (
                             <MarkerF
                               key={`${marker.dayId}-${marker.id}-${marker.number}`}
