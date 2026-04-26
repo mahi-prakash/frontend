@@ -3,9 +3,19 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Card from "../components/common/Card";
-import { Plane, Hotel, Car, Calendar, Sparkles, Map, ArrowLeft, Star, MapPin, Search, ChevronDown, Clock, Bed, Ticket } from "lucide-react";
+import { Plane, Hotel, Car, Calendar, Sparkles, Map, ArrowLeft, Star, MapPin, Search, ChevronDown, Clock, Bed, Ticket, Trash2 } from "lucide-react";
+
 import { useTrip } from "../context/TripContext";
 import { api } from "../services/api";
+
+const ICON_MAP = {
+    Plane: Plane,
+    Hotel: Hotel,
+    Ticket: Ticket,
+    Car: Car
+};
+
+
 
 const Bookings = () => {
     const navigate = useNavigate();
@@ -20,8 +30,18 @@ const Bookings = () => {
     const [pnrInput, setPnrInput] = useState("");
     const [savedBookings, setSavedBookings] = useState(() => {
         const saved = sessionStorage.getItem("mockSavedBookings");
-        return saved ? JSON.parse(saved) : [];
+        try {
+            const parsed = saved ? JSON.parse(saved) : [];
+            // Basic validation to prevent crash from old corrupted data
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+            return [];
+        }
     });
+
+    const deleteBooking = (id) => {
+        setSavedBookings(prev => prev.filter(b => b.id !== id));
+    };
 
     useEffect(() => {
         sessionStorage.setItem("mockSavedBookings", JSON.stringify(savedBookings));
@@ -134,40 +154,62 @@ const Bookings = () => {
                                         </h2>
                                         <p className="text-slate-500 text-sm">Confirm and book your final itineraries</p>
                                     </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                        {availableTrips.map((trip) => (
-                                            <motion.div
-                                                key={trip.id}
-                                                whileHover={{ y: -8 }}
-                                                whileTap={{ scale: 0.98 }}
-                                                onClick={() => setSelectedTrip(trip)}
-                                                className="cursor-pointer group h-full"
-                                            >
-                                                <Card className="overflow-hidden border border-slate-200 hover:border-sky-200 hover:shadow-2xl transition-all duration-300 h-full flex flex-col">
-                                                    <div className="h-48 overflow-hidden relative">
-                                                        <img
-                                                            src={tripImages[trip.id] || trip.image || "https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=800&auto=format&fit=crop"}
-                                                            alt={trip.title}
-                                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                                        />
-                                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-80" />
-                                                        <div className="absolute bottom-4 left-4 text-white">
-                                                            <h3 className="font-bold text-lg mb-0.5">{trip.title}</h3>
-                                                            <div className="flex items-center gap-2 text-xs font-medium text-white/90">
-                                                                <Calendar className="w-3 h-3" />
-                                                                {trip.destination}
+                                    <div className="min-h-[300px] flex items-center justify-center">
+                                        {availableTrips.length > 0 ? (
+                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
+                                                {availableTrips.map((trip) => (
+                                                    <motion.div
+                                                        key={trip.id}
+                                                        whileHover={{ y: -8 }}
+                                                        whileTap={{ scale: 0.98 }}
+                                                        onClick={() => setSelectedTrip(trip)}
+                                                        className="cursor-pointer group h-full"
+                                                    >
+                                                        <Card className="overflow-hidden border border-slate-200 hover:border-sky-200 hover:shadow-2xl transition-all duration-300 h-full flex flex-col">
+                                                            <div className="h-48 overflow-hidden relative">
+                                                                <img
+                                                                    src={tripImages[trip.id] || trip.image || "https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=800&auto=format&fit=crop"}
+                                                                    alt={trip.title}
+                                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                                                />
+                                                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-80" />
+                                                                <div className="absolute bottom-4 left-4 text-white">
+                                                                    <h3 className="font-bold text-lg mb-0.5">{trip.title}</h3>
+                                                                    <div className="flex items-center gap-2 text-xs font-medium text-white/90">
+                                                                        <Calendar className="w-3 h-3" />
+                                                                        {trip.destination}
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="p-4 flex-1 bg-white">
-                                                        <div className="flex flex-wrap gap-2 text-xs font-medium text-slate-600">
-                                                            <span className="bg-slate-50 border border-slate-100 px-2 py-1 rounded-md">{trip.suggestions?.flights?.length || 0} Flights</span>
-                                                            <span className="bg-slate-50 border border-slate-100 px-2 py-1 rounded-md">{trip.suggestions?.hotels?.length || 0} Hotels</span>
-                                                        </div>
-                                                    </div>
-                                                </Card>
-                                            </motion.div>
-                                        ))}
+                                                            <div className="p-4 flex-1 bg-white">
+                                                                <div className="flex flex-wrap gap-2 text-xs font-medium text-slate-600">
+                                                                    <span className="bg-slate-50 border border-slate-100 px-2 py-1 rounded-md">{trip.suggestions?.flights?.length || 0} Flights</span>
+                                                                    <span className="bg-slate-50 border border-slate-100 px-2 py-1 rounded-md">{trip.suggestions?.hotels?.length || 0} Hotels</span>
+                                                                </div>
+                                                            </div>
+                                                        </Card>
+                                                    </motion.div>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div className="flex flex-col items-center justify-center space-y-6 text-center py-10">
+                                                <div className="bg-slate-50 p-8 rounded-full ring-1 ring-slate-100">
+                                                    <Map className="w-12 h-12 text-slate-300" />
+                                                </div>
+                                                <div className="space-y-2 max-w-sm">
+                                                    <h3 className="text-xl font-bold text-slate-900">No active plans found</h3>
+                                                    <p className="text-slate-500 font-medium leading-relaxed">
+                                                        Head over to the New Trip in the Chat Page to start planning your next adventure and see it here.
+                                                    </p>
+                                                </div>
+                                                <button
+                                                    onClick={() => navigate('/chat')}
+                                                    className="px-8 py-3 bg-sky-600 text-white font-bold rounded-2xl hover:bg-sky-700 transition shadow-lg shadow-sky-100 active:scale-95"
+                                                >
+                                                    Plan a Trip
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 </Card>
                             ) : (
@@ -256,7 +298,7 @@ const Bookings = () => {
                             <Card className="p-8 border border-slate-200 shadow-xl bg-white rounded-[32px]">
                                 <div className="mb-6">
                                     <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-                                        <Ticket className="w-6 h-6 text-emerald-500" />
+                                        <Ticket className="w-6 h-6 text-sky-500" />
                                         Save External Bookings
                                     </h2>
                                     <p className="text-slate-500 text-sm">Have you booked outside the app? Save your PNR or Booking ID here to keep track of everything in one place.</p>
@@ -269,9 +311,10 @@ const Bookings = () => {
                                         if (!pnrInput.trim()) return;
 
                                         let mockDetails = {};
-                                        if (bookingType === 'Flights') mockDetails = { title: 'IndiGo 6E-201', desc: 'Delhi (DEL) → Mumbai (BOM) · Seat 12A', icon: Plane, color: 'sky' };
-                                        else if (bookingType === 'Trains') mockDetails = { title: 'Rajdhani Express (12952)', desc: 'New Delhi → Mumbai Central · AC 1st Class', icon: Ticket, color: 'emerald' };
-                                        else mockDetails = { title: 'Taj Mahal Palace Hotel', desc: '2 Nights stay · Sea View Deluxe Room', icon: Hotel, color: 'indigo' };
+                                        if (bookingType === 'Flights') mockDetails = { title: 'IndiGo 6E-201', desc: 'Delhi (DEL) → Mumbai (BOM) · Seat 12A', iconName: 'Plane', color: 'sky' };
+                                        else if (bookingType === 'Trains') mockDetails = { title: 'Rajdhani Express (12952)', desc: 'New Delhi → Mumbai Central · AC 1st Class', iconName: 'Ticket', color: 'sky' };
+                                        else mockDetails = { title: 'Taj Mahal Palace Hotel', desc: '2 Nights stay · Sea View Deluxe Room', iconName: 'Hotel', color: 'indigo' };
+
 
                                         const newBooking = {
                                             id: Date.now(),
@@ -293,7 +336,7 @@ const Bookings = () => {
                                                 type="button"
                                                 onClick={() => setBookingType(type)}
                                                 className={`flex-1 py-3 px-4 rounded-xl border-2 font-bold transition-all flex items-center justify-center gap-2 ${bookingType === type
-                                                    ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+                                                    ? 'border-sky-500 bg-sky-50 text-sky-700'
                                                     : 'border-slate-100 text-slate-500 hover:border-slate-200'
                                                     }`}
                                             >
@@ -312,12 +355,12 @@ const Bookings = () => {
                                             value={pnrInput}
                                             onChange={(e) => setPnrInput(e.target.value)}
                                             placeholder={bookingType === 'Trains' ? "Enter 10-digit PNR Number" : "Enter Booking ID or Reference"}
-                                            className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+                                            className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
                                             required
                                         />
                                         <button
                                             type="submit"
-                                            className="px-8 py-3 bg-emerald-500 text-white font-bold rounded-xl hover:bg-emerald-600 transition shadow-lg shadow-emerald-100 active:scale-95"
+                                            className="px-8 py-3 bg-sky-500 text-white font-bold rounded-xl hover:bg-sky-600 transition shadow-lg shadow-sky-100 active:scale-95"
                                         >
                                             Save Details
                                         </button>
@@ -330,17 +373,27 @@ const Bookings = () => {
                                         <h3 className="font-bold text-slate-900 mb-4">Your Saved Bookings</h3>
                                         <div className="space-y-3">
                                             {savedBookings.map(booking => {
-                                                const Icon = booking.icon;
+                                                const BookingIcon = ICON_MAP[booking.iconName] || Ticket;
                                                 return (
                                                     <div key={booking.id} className="p-4 rounded-2xl border border-slate-100 bg-slate-50/50 flex items-center gap-4">
                                                         <div className={`w-12 h-12 rounded-full bg-${booking.color}-100 text-${booking.color}-600 flex items-center justify-center shrink-0`}>
-                                                            <Icon className="w-6 h-6" />
+                                                            <BookingIcon className="w-6 h-6" />
                                                         </div>
+
                                                         <div className="flex-1">
                                                             <div className="flex justify-between items-start mb-1">
                                                                 <h4 className="font-bold text-slate-900">{booking.title}</h4>
-                                                                <span className="text-xs font-bold text-slate-500 bg-slate-200/50 px-2 py-1 rounded">PNR: {booking.pnr}</span>
+                                                                <div className="flex items-center gap-2">
+                                                                    <span className="text-xs font-bold text-slate-500 bg-slate-200/50 px-2 py-1 rounded">PNR: {booking.pnr}</span>
+                                                                    <button
+                                                                        onClick={() => deleteBooking(booking.id)}
+                                                                        className="p-1.5 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
+                                                                    >
+                                                                        <Trash2 size={14} />
+                                                                    </button>
+                                                                </div>
                                                             </div>
+
                                                             <p className="text-sm text-slate-500 font-medium">{booking.desc}</p>
                                                             <p className="text-[10px] text-slate-400 mt-1">Saved on {booking.date}</p>
                                                         </div>

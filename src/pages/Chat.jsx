@@ -20,6 +20,8 @@ import { api } from "../services/api";
 import Dropdown from "../components/common/Dropdown";
 import { useJsApiLoader } from "@react-google-maps/api";
 import { fetchPhoto } from "../utils/unsplash";
+import { GOOGLE_MAPS_API_KEY } from "../utils/googleMaps";
+
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -86,9 +88,10 @@ export default function Chat() {
   // ── Google Maps Initialization ───────────────────────────────────────────
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
     libraries: ['places']
   });
+
 
   // ── Onboarding modal ───────────────────────────────────────────────────────
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -180,11 +183,9 @@ export default function Chat() {
   // ── Fetch messages for a trip ──────────────────────────────────────────────
   const fetchMessages = async (tripId) => {
     if (!token || !tripId) return;
-    console.log("📡 Fetching messages for:", tripId);
 
     try {
       // In MVP, we don't fetch messages from backend, they are in localStorage
-      console.log("📝 Loading messages from local state for:", tripId);
 
       const current = tripData[tripId];
       if (current?.messages) {
@@ -229,7 +230,6 @@ export default function Chat() {
 
       // 🔥 LOADING GUARD: Wait for trips to be available before deciding to recover
       if (loading && (!realTrips || realTrips.length === 0)) {
-        console.log("⏳ Waiting for trips to load before checking recovery...");
         return;
       }
 
@@ -239,10 +239,8 @@ export default function Chat() {
         (Array.isArray(tripInList.itinerary.days) ? tripInList.itinerary.days.length > 0 : Object.keys(tripInList.itinerary.days).length > 0);
 
       if (hasDbItinerary) {
-        console.log("✅ Using Itinerary from DB Column (skipping history recovery)");
         recoveredItinerary = tripInList.itinerary;
       } else if (recoveredItinerary) {
-        console.log("🖼️ Enhancing recovered itinerary images...");
         try {
           recoveredItinerary = await enhanceItineraryWithImages(recoveredItinerary);
         } catch (e) { console.error("Recovery Image Enhancement failed", e); }
@@ -564,7 +562,7 @@ export default function Chat() {
         {
           id: Date.now() + 3,
           from: "bot",
-          text: `Error: ${err.message}. Please check if the backend is running and the database is connected.`,
+          text: "I'm having trouble connecting to the travel engine. Please try again in a few seconds.",
         },
       ]);
     } finally {
@@ -1241,7 +1239,7 @@ export default function Chat() {
                     </div>
 
                     {/* Itinerary cards */}
-                    <div className="rounded-3xl bg-white shadow-2xl px-6 py-2 space-y-4 max-h-[48vh] overflow-y-auto no-scrollbar mb-4">
+                    <div className="rounded-3xl bg-white shadow-2xl px-6 py-6 space-y-4 max-h-[48vh] overflow-y-auto no-scrollbar mb-4">
                       {!activeItinerary ? (
                         <div className="flex flex-col items-center justify-center py-12 text-center">
                           <Sparkles className="text-sky-300 w-8 h-8 mb-3" />
@@ -1269,9 +1267,9 @@ export default function Chat() {
                               <div className="flex items-center gap-3 mb-4">
                                 <div className="h-px flex-1 bg-slate-100" />
                                 <div className="bg-slate-50 border border-slate-100 px-4 py-1.5 rounded-full flex items-center gap-2">
-
-                                  <span className="text-[11px] font-bold text-sky-600">
-                                    {day.date}
+                                  {/*add the day 1 or 2 thing here...*/}
+                                  <span className="text-[13px] font-bold text-sky-600">
+                                    {"Day " + day.day}
                                   </span>
 
                                 </div>
@@ -1326,7 +1324,7 @@ export default function Chat() {
                                         className="relative flex items-center gap-4 w-full rounded-2xl bg-white px-6 py-3 shadow-xl border border-slate-100 hover:shadow-2xl transition-all"
                                       >
                                         <div className="flex-1">
-                                          <div className="flex items-center gap-2 text-[10px] text-sky-600 font-bold uppercase tracking-wide">
+                                          <div className="flex items-center gap-2 text-[13px] text-sky-600 font-bold uppercase tracking-wide">
                                             <Icon size={12} /> {activity.time} •{" "}
                                             {activity.type}
                                           </div>
@@ -1362,7 +1360,7 @@ export default function Chat() {
                       whileTap={{ scale: 0.98 }}
                       onClick={() => navigate("/bookings")}
                       disabled={!activeItinerary}
-                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-sky-600 to-sky-500 text-white font-bold text-sm shadow-xl shadow-sky-100 flex items-center justify-center gap-3 hover:shadow-2xl hover:shadow-sky-300 transition-all duration-300 disabled:opacity-40"
+                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-sky-700 to-sky-500 text-white font-bold text-sm shadow-xl shadow-sky-100 flex items-center justify-center gap-3 hover:shadow-2xl hover:shadow-sky-300 transition-all duration-300 disabled:opacity-40"
                     >
                       <Sparkles size={18} />
                       Finalize & Show Bookings
