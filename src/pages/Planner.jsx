@@ -1061,7 +1061,7 @@ export default function Planner() {
 
               {/* Empty State for Your Plan */}
               {planMode === 'user' && displayDayOrder.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-25 text-center">
+                <div className="flex flex-col items-center justify-center py-10 text-center">
                   <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-6">
                     <Rocket className="text-slate-600" size={32} />
                   </div>
@@ -1303,31 +1303,25 @@ export default function Planner() {
                   </div>
                 );
               })}
-              {!isReadOnly && (
-                <button
-                  onClick={addDay}
-                  className="w-full py-4 rounded-2xl border-2 border-dashed border-slate-200 text-slate-400 hover:text-sky-600 hover:border-sky-300 hover:bg-sky-50 transition-all font-black text-[11px] uppercase tracking-wider flex items-center justify-center gap-2 group mb-6"
-                >
-                  <Plus size={16} className="group-hover:rotate-90 transition-transform duration-300" />
-                  Add Day to Plan
-                </button>
-              )}
+
             </div>
           </div>
           <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-28 z-0 bg-gradient-to-t from-white via-white/90 to-transparent rounded-b-[32px]" />
 
-          <div className="absolute bottom-5 left-0 right-0 flex justify-center z-50">
-            <button
-              onClick={() => setIsCompleted(!isCompleted)}
-              className={`w-1/2 max-w-[260px] py-3 rounded-2xl text-[12px] font-black flex items-center justify-center gap-2 border-2 transition-all duration-300 ${isCompleted
-                ? 'bg-emerald-500 text-white border-emerald-500'
-                : 'bg-transparent text-sky-500 border-sky-400/40 opacity-70 hover:opacity-100 hover:text-sky-700 hover:border-sky-600 hover:bg-sky-50'
-                }`}
-            >
-              <CheckCircle2 size={16} strokeWidth={3} />
-              {isCompleted ? 'TRIP COMPLETED' : 'COMPLETE JOURNEY'}
-            </button>
-          </div>
+          {displayDayOrder.length > 0 && (
+            <div className="absolute bottom-5 left-0 right-0 flex justify-center z-50">
+              <button
+                onClick={() => setIsCompleted(!isCompleted)}
+                className={`w-1/2 max-w-[260px] py-3 rounded-2xl text-[12px] font-black flex items-center justify-center gap-2 border-2 transition-all duration-300 ${isCompleted
+                  ? 'bg-emerald-500 text-white border-emerald-500'
+                  : 'bg-transparent text-sky-500 border-sky-400/40 opacity-70 hover:opacity-100 hover:text-sky-700 hover:border-sky-600 hover:bg-sky-50'
+                  }`}
+              >
+                <CheckCircle2 size={16} strokeWidth={3} />
+                {isCompleted ? 'TRIP COMPLETED' : 'COMPLETE JOURNEY'}
+              </button>
+            </div>
+          )}
 
         </motion.div>
 
