@@ -1,8 +1,8 @@
 // src/pages/Landing.jsx
 
 import React, { useEffect, useRef, useState } from "react";
-import { motion as Motion } from "framer-motion";
-import { ArrowUpRight, Sparkles, MapPin, ChevronDown } from "lucide-react";
+import { motion as Motion, useMotionValue, useMotionTemplate, AnimatePresence } from "framer-motion";
+import { ArrowUpRight, Sparkles, MapPin, ChevronDown, Rocket, ChevronLeft, ChevronRight, X, CheckCircle2, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import Card from "../components/common/Card";
@@ -149,6 +149,8 @@ const experiences = [
 const ExperienceCarousel = () => {
   const containerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [selectedExp, setSelectedExp] = useState(null);
+
 
   // helper: scroll exactly one card
   const scrollByCard = (nextIndex) => {
@@ -171,7 +173,7 @@ const ExperienceCarousel = () => {
         scrollByCard(next);
         return next;
       });
-    }, 3000); // 3 seconds
+    }, 4000);
 
     return () => clearInterval(interval);
   }, []);
@@ -196,14 +198,14 @@ const ExperienceCarousel = () => {
         onClick={() => handleArrow("prev")}
         className="hidden md:flex absolute -left-10 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-white border border-slate-200 shadow-md items-center justify-center text-slate-600 hover:bg-slate-50"
       >
-        ‹
+        <ChevronLeft className="w-5 h-5" />
       </button>
       <button
         type="button"
         onClick={() => handleArrow("next")}
         className="hidden md:flex absolute -right-10 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-white border border-slate-200 shadow-md items-center justify-center text-slate-600 hover:bg-slate-50"
       >
-        ›
+        <ChevronRight className="w-5 h-5" />
       </button>
 
       {/* Scrollable cards */}
@@ -237,13 +239,94 @@ const ExperienceCarousel = () => {
                 </h3>
                 <p className="mt-2 text-sm text-slate-600">{exp.vibe}</p>
               </div>
-              <p className="mt-4 text-[11px] text-sky-600 font-semibold">
+              <p
+                onClick={() => setSelectedExp(exp)}
+                className="mt-4 text-[11px] text-sky-600 font-semibold cursor-pointer hover:text-sky-400 transition-colors"
+              >
                 See how this trip was structured →
               </p>
             </div>
           </div>
         ))}
       </div>
+
+      {/* TRIP STRUCTURE MODAL (MVP Placeholder) */}
+      <AnimatePresence>
+        {selectedExp && (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-6 overflow-hidden">
+            <Motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedExp(null)}
+              className="absolute inset-0 bg-slate-900/80 backdrop-blur-md"
+            />
+
+            <Motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 40 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 40 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="relative w-full max-w-2xl bg-white rounded-[32px] overflow-hidden shadow-2xl flex flex-col md:flex-row pointer-events-auto"
+            >
+              <button
+                onClick={() => setSelectedExp(null)}
+                className="absolute top-6 right-6 z-20 p-2 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-900"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              {/* SIDE IMAGE */}
+              <div className="md:w-1/3 h-[200px] md:h-auto relative">
+                <img
+                  src={selectedExp.img}
+                  alt={selectedExp.city}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-slate-900/40" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Lock className="w-10 h-10 text-white/50" />
+                </div>
+              </div>
+
+              {/* CONTENT */}
+              <div className="md:w-2/3 p-8 md:p-10">
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-[11px] font-bold text-sky-600 uppercase tracking-widest mb-3 italic">MVP Roadmap</h3>
+                    <h2 className="text-2xl font-black text-slate-900 leading-tight">
+                      Live boards are <br />in the works.
+                    </h2>
+                    <p className="mt-4 text-slate-600 leading-relaxed text-sm font-medium">
+                      We're currently building the infrastructure to let you clone real itineraries like this one in '{selectedExp.city}''. Soon, you'll be able to jump directly into their shared board, see their budget logs, and turn their vibe into your next trip.
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3 text-slate-400">
+                      <CheckCircle2 className="w-4 h-4 shrink-0" />
+                      <span className="text-xs font-semibold">Interactive Chronological Timelines</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-slate-400">
+                      <CheckCircle2 className="w-4 h-4 shrink-0" />
+                      <span className="text-xs font-semibold">One-Click Itinerary Cloning</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-4">
+                    <button
+                      onClick={() => setSelectedExp(null)}
+                      className="w-full py-4 bg-sky-700 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-slate-900/20"
+                    >
+                      Got it, keep me posted!
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </Motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
@@ -252,6 +335,15 @@ const Landing = () => {
   const navigate = useNavigate();
   const { token, user } = useUser();
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
 
   // If already logged in, redirect to app automatically
   useEffect(() => {
@@ -322,24 +414,55 @@ const Landing = () => {
               transition={{ delay: 0.5 }}
               className="flex flex-wrap gap-4 pt-4"
             >
-              <button
+              <Motion.button
                 onClick={handleGoToAuth}
-
-                className="group relative px-9 py-5 bg-slate-900 text-white rounded-full font-bold text-sm md:text-lg overflow-hidden transition-transform hover:scale-105 active:scale-95 shadow-xl shadow-slate-900/20"
+                onMouseMove={handleMouseMove}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="group relative px-9 py-5 bg-slate-900 text-white rounded-full font-bold text-sm md:text-lg overflow-hidden shadow-xl shadow-slate-900/20 cursor-pointer"
               >
+                <Motion.div
+                  className="pointer-events-none absolute -inset-px rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{
+                    background: useMotionTemplate`
+                      radial-gradient(
+                        250px circle at ${mouseX}px ${mouseY}px,
+                        rgba(255, 255, 255, 0.15),
+                        transparent 80%
+                      )
+                    `,
+                  }}
+                />
                 <span className="relative z-10 flex items-center gap-2">
                   Start Exploring
                   <ArrowUpRight className="w-5 h-5 group-hover:rotate-45 transition-transform" />
                 </span>
-              </button>
+              </Motion.button>
 
-              <button
+              <Motion.button
                 onClick={() => navigate("/quiz")}
-                className="group px-8 py-4 bg-white text-slate-900 font-bold text-sm md:text-lg flex items-center gap-2 hover:bg-slate-100 border border-slate-200 shadow-sm rounded-full"
+                onMouseMove={handleMouseMove}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.95 }}
+                className="group relative px-8 py-4 bg-white text-slate-900 font-bold text-sm md:text-lg flex items-center gap-2 hover:bg-slate-50 border border-slate-200 shadow-sm rounded-full overflow-hidden cursor-pointer"
               >
-                <Sparkles className="w-7 h-7 text-sky-500" />
-                Get Your Vibe
-              </button>
+                <Motion.div
+                  className="pointer-events-none absolute -inset-px rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{
+                    background: useMotionTemplate`
+                      radial-gradient(
+                        250px circle at ${mouseX}px ${mouseY}px,
+                        rgba(14, 165, 233, 0.15),
+                        transparent 80%
+                      )
+                    `,
+                  }}
+                />
+                <div className="relative z-10 flex items-center gap-2">
+                  <Rocket className="w-7 h-7 text-sky-500" />
+                  Get Your Vibe
+                </div>
+              </Motion.button>
             </Motion.div>
           </Motion.div>
 
@@ -510,7 +633,7 @@ const Landing = () => {
               onClick={handleGoToAuth}
               className="group relative px-9 py-4.5 bg-slate-900 text-white rounded-full font-bold text-xl md:text-lg overflow-hidden transition-transform hover:scale-115 active:scale-95 shadow-lg shadow-slate-900/20 whitespace-nowrap"
             >
-              <span className="relative z-10 flex items-center gap-2">
+              <span className="relative z-10 flex items-center justify-center gap-2 leading-none">
                 Start planning now
                 <ArrowUpRight className="w-5 h-5 group-hover:rotate-45 transition-transform" />
               </span>
