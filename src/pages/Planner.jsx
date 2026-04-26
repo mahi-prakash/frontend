@@ -274,6 +274,15 @@ export default function Planner() {
     libraries: ['places']
   });
 
+  const [mapAuthFailed, setMapAuthFailed] = useState(false);
+
+  useEffect(() => {
+    // 🛡️ Catch Google Maps Auth Failures (e.g. invalid API key)
+    window.gm_authFailure = () => {
+      console.error("❌ [Google Maps] Authentication Failure");
+      setMapAuthFailed(true);
+    };
+  }, []);
 
   if (loadError) {
     console.error("❌ [Google Maps] Load Error:", loadError);
@@ -1472,7 +1481,7 @@ export default function Planner() {
                 <div className="w-full h-full flex flex-col bg-white rounded-[24px] overflow-hidden shadow-sm ring-1 ring-black/5">
                   {/* 1. VISUAL CARD (Map) */}
                   <div className="flex-1 relative z-0">
-                    {isLoaded ? (
+                    {isLoaded && !mapAuthFailed ? (
                       <GoogleMap
                         mapContainerStyle={containerStyle}
                         center={mapMarkers.length > 0 ? { lat: mapMarkers[0].pos[0], lng: mapMarkers[0].pos[1] } : { lat: 48.8566, lng: 2.3522 }}
@@ -1546,19 +1555,13 @@ export default function Planner() {
                           ));
                         })()}
                       </GoogleMap>
-                    ) : loadError ? (
-                      <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-slate-100 overflow-hidden rounded-[24px]">
+                    ) : (loadError || mapAuthFailed) ? (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center text-center bg-slate-100 overflow-hidden rounded-[24px]">
                         <img
                           src="https://images.unsplash.com/photo-1524661135-423995f22d0b?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                           alt="Map Error"
-                          className="absolute inset-0 w-full h-full object-cover opacity-30"
+                          className="absolute inset-0 w-full h-full object-cover"
                         />
-                        <div className="relative z-10 bg-white/80 backdrop-blur-md p-8 rounded-[32px] border border-white shadow-2xl">
-                          <p className="text-lg font-black text-slate-800 mb-2">Oops! Something went wrong.</p>
-                          <p className="text-sm font-bold text-slate-500 max-w-[240px] mx-auto leading-relaxed">
-                            This page didn't load Google Maps.
-                          </p>
-                        </div>
                       </div>
                     ) : (
                       <div className="w-full h-full bg-slate-50 flex flex-col items-center justify-center gap-4">
