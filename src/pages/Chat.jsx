@@ -183,11 +183,9 @@ export default function Chat() {
   // ── Fetch messages for a trip ──────────────────────────────────────────────
   const fetchMessages = async (tripId) => {
     if (!token || !tripId) return;
-    console.log("📡 Fetching messages for:", tripId);
 
     try {
       // In MVP, we don't fetch messages from backend, they are in localStorage
-      console.log("📝 Loading messages from local state for:", tripId);
 
       const current = tripData[tripId];
       if (current?.messages) {
@@ -232,7 +230,6 @@ export default function Chat() {
 
       // 🔥 LOADING GUARD: Wait for trips to be available before deciding to recover
       if (loading && (!realTrips || realTrips.length === 0)) {
-        console.log("⏳ Waiting for trips to load before checking recovery...");
         return;
       }
 
@@ -242,10 +239,8 @@ export default function Chat() {
         (Array.isArray(tripInList.itinerary.days) ? tripInList.itinerary.days.length > 0 : Object.keys(tripInList.itinerary.days).length > 0);
 
       if (hasDbItinerary) {
-        console.log("✅ Using Itinerary from DB Column (skipping history recovery)");
         recoveredItinerary = tripInList.itinerary;
       } else if (recoveredItinerary) {
-        console.log("🖼️ Enhancing recovered itinerary images...");
         try {
           recoveredItinerary = await enhanceItineraryWithImages(recoveredItinerary);
         } catch (e) { console.error("Recovery Image Enhancement failed", e); }

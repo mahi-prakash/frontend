@@ -262,7 +262,6 @@ const Landing = () => {
 
 
   const handleGoToAuth = () => {
-    console.log("✅ REDIRECTING TO PLANNER");
     navigate("/chat");
   };
 

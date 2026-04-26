@@ -256,11 +256,9 @@ const parseTimeToMinutes = (timeStr) => {
 // --- Main Component ---
 
 export default function Planner() {
-  console.log("🏗️ [Planner] Component Rendered");
 
   // 🧪 Mount Pulse
   useEffect(() => {
-    console.log("✅ [Planner] Lifecycle: MOUNTED");
     // alert("Planner Engine Initialized! 🚀"); // Removed to avoid annoying popups if it works fast
   }, []);
 
@@ -280,7 +278,6 @@ export default function Planner() {
     console.error("❌ [Google Maps] Load Error:", loadError);
   }
 
-  console.log("🗺️ [Map] Loading State:", isLoaded);
 
   const [map, setMap] = useState(null);
 
@@ -334,17 +331,14 @@ export default function Planner() {
 
     // 🛡️ HARD STOP: If this specific trip is already initialized in state, DO NOT OVERWRITE
     if (hasInitializedRef.current === activeTripId) {
-      console.log("🛡️ [Planner] Guard: Trip already initialized. Protecting local edits.");
       return;
     }
 
-    console.log("📡 [Planner] Initializing working itinerary for trip:", activeTripId);
 
     const dbItinerary = activeTrip?.itinerary;
     const cachedItinerary = (itineraryCache || {})[activeTripId];
     const sourceItinerary = dbItinerary || cachedItinerary;
 
-    console.log("🔍 [Planner] Source check:", {
       hasDb: !!dbItinerary,
       hasCache: !!cachedItinerary,
       isSourceNull: sourceItinerary === null
@@ -385,7 +379,6 @@ export default function Planner() {
       hasInitializedRef.current = activeTripId;
     } else if (activeTrip?.ai_itinerary && sourceItinerary === null) {
       // 🛡️ ONLY seed from AI if Your Plan (itinerary) is ABSOLUTELY null (never touched)
-      console.log("🪄 [Planner] Seeding Your Plan from AI version (First time only)");
       const aiDays = activeTrip.ai_itinerary.days || {};
       const normalizedAi = {};
 
@@ -431,7 +424,6 @@ export default function Planner() {
     if (planMode !== 'user' || !activeTripId || Object.keys(days).length === 0) return;
 
     const timer = setTimeout(() => {
-      console.log("💾 [Auto-Save] Syncing itinerary to backend...");
       updateTripItinerary(activeTripId, { days });
     }, 2000); // Wait 2 seconds of inactivity before saving
 
@@ -626,7 +618,6 @@ export default function Planner() {
       return;
     }
 
-    console.log("🪄 [Planner] Restoring to AI version...");
     const aiDays = activeTrip.ai_itinerary.days || {};
     const normalizedAi = {};
 
@@ -1494,7 +1485,6 @@ export default function Planner() {
                         {/* 3. Numbered Markers */}
                         {(() => {
                           if (mapMarkers.length > 0) {
-                            console.log(`📍 [Map] Rendering ${mapMarkers.length} journey pins`);
                           }
                           return mapMarkers.map((marker) => (
                             <MarkerF

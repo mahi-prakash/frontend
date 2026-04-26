@@ -150,7 +150,6 @@ const UnsplashImage = ({ query, alt, style }) => {
   useEffect(() => {
     if (query) {
       fetchPhoto(query).then(u => {
-        console.log(`Unsplash [${query}]:`, u);
         setUrl(u);
       });
     }
