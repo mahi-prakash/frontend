@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { Plane, Bookmark, Award, Globe, Pen, Camera, Globe2, MapPin, Calendar, ClipboardList, Plus, Heart, Settings, ShieldCheck, ChevronRight, BookOpen, Sun, Utensils, Compass, Send } from "lucide-react";
 import { useUser } from "../context/UserContext";
+import { GOOGLE_MAPS_API_KEY } from "../utils/googleMaps";
+
 
 const LIBRARIES = ['places'];
 
@@ -36,9 +38,10 @@ const ProfileDashboard = ({ user }) => {
   // Google Maps API Loader
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
     libraries: LIBRARIES
   });
+
 
   const toggleBucketList = (id) => {
     setBucketList(bucketList.map(item =>

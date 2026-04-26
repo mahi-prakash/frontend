@@ -54,6 +54,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTrip } from '../context/TripContext';
 import { useUser } from '../context/UserContext';
 import Dropdown from '../components/common/Dropdown';
+import { GOOGLE_MAPS_API_KEY } from '../utils/googleMaps';
+
 const containerStyle = {
   width: "100%",
   height: "100%",
@@ -269,9 +271,10 @@ export default function Planner() {
   // 🗺️ Initialize Google Maps Engine
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
     libraries: ['places']
   });
+
 
   if (loadError) {
     console.error("❌ [Google Maps] Load Error:", loadError);

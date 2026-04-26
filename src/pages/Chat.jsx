@@ -20,6 +20,8 @@ import { api } from "../services/api";
 import Dropdown from "../components/common/Dropdown";
 import { useJsApiLoader } from "@react-google-maps/api";
 import { fetchPhoto } from "../utils/unsplash";
+import { GOOGLE_MAPS_API_KEY } from "../utils/googleMaps";
+
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -86,9 +88,10 @@ export default function Chat() {
   // ── Google Maps Initialization ───────────────────────────────────────────
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
     libraries: ['places']
   });
+
 
   // ── Onboarding modal ───────────────────────────────────────────────────────
   const [showOnboarding, setShowOnboarding] = useState(false);
