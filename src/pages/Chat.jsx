@@ -373,7 +373,7 @@ export default function Chat() {
           id: Date.now() + 1,
           from: "bot",
           text: `Hey ${userName}! Where do you wanna go? 🌍`,
-          options: ["Beach 🏖️", "Mountains ⛰️", "City 🏙️", "Adventure 🧗", "Cultural 🏛️", "Nature 🌿", "Party 🎉", "Budget 💸"],
+          options: ["Beach 🏖️", "Mountains ⛰️", "City 🏙️"],
         };
 
         setMessages(tripId, (prev) => [...prev, botMessage]);
@@ -631,7 +631,7 @@ export default function Chat() {
       if (!collected.destination) {
         aiStage = "ASK_DESTINATION";
         firstQuestion = `Hey ${userName}! I've set up your trip. First things first—where are we headed? 🌍`;
-        options = ["Beach 🏖️", "Mountains ⛰️", "City 🏙️", "Adventure 🧗", "Cultural 🏛️", "Nature 🌿", "Party 🎉", "Budget 💸"];
+        options = ["Beach 🏖️", "Mountains ⛰️", "City 🏙️"];
       } else if (!collected.days) {
         aiStage = "ASK_DAYS";
         firstQuestion = `Love it, ${destination} is amazing! 🌍 How many days should I plan for?`;
@@ -812,12 +812,7 @@ export default function Chat() {
                         {[
                           { label: "Beach 🏖️", val: "Beach" },
                           { label: "Mountains ⛰️", val: "Mountains" },
-                          { label: "City 🏙️", val: "City" },
-                          { label: "Adventure 🧗", val: "Adventure" },
-                          { label: "Cultural 🏛️", val: "Cultural" },
-                          { label: "Nature 🌿", val: "Nature" },
-                          { label: "Party 🎉", val: "Party" },
-                          { label: "Budget 💸", val: "Budget" }
+                          { label: "City 🏙️", val: "City" }
                         ].map((chip) => (
                           <button
                             key={chip.val}
