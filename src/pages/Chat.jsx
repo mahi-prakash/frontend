@@ -871,10 +871,10 @@ export default function Chat() {
                             onClick={() =>
                               setOnboardingData({ ...onboardingData, days: d })
                             }
-                            className={`p-3.5 rounded-xl border-2 transition font-bold text-[10px] ${onboardingData.days === d ? "border-sky-600 bg-sky-50 text-sky-600" : "border-slate-100 hover:border-slate-200 text-slate-600"}`}
+                            className={`p-1.5 rounded-xl border-2 transition font-bold text-[10px] ${onboardingData.days === d ? "border-sky-600 bg-sky-50 text-sky-600" : "border-slate-100 hover:border-slate-200 text-slate-600"}`}
                           >
-                            {d === "Surprise me" ? "✨" : d}
-                            <div className="text-[8px] mt-0.5">{d === "Surprise me" ? "Surprise" : "Days"}</div>
+                            {d === "Surprise me" ? "" : d}
+                            <div className="text-[10px] mt-0.5">{d === "Surprise me" ? "Surprise" : "Days"}</div>
                           </button>
                         ))}
                       </div>
@@ -937,8 +937,8 @@ export default function Chat() {
                                 }
                                 className={`p-2.5 rounded-xl border-2 transition font-bold text-[10px] ${onboardingData.budget === b ? "border-sky-600 bg-sky-50 text-sky-600" : "border-slate-100 hover:border-slate-200 text-slate-600"}`}
                               >
-                                {b === "Surprise me" ? "✨" : b}
-                                <div className="text-[8px] mt-0.5">{b === "Surprise me" ? "Surprise" : ""}</div>
+                                {b}
+
                               </button>
                             ),
                           )}
@@ -979,7 +979,7 @@ export default function Chat() {
                           Vibe
                         </p>
                         <div className="grid grid-cols-5 gap-2">
-                          {["Chaotic", "Chill", "Adventure", "Balanced", "Not decided"].map(
+                          {["Relaxing", "Adventure", "Balanced", "Spiritual", "Not decided"].map(
                             (v) => (
                               <button
                                 key={v}

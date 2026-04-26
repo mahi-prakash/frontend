@@ -1546,6 +1546,20 @@ export default function Planner() {
                           ));
                         })()}
                       </GoogleMap>
+                    ) : loadError ? (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-slate-100 overflow-hidden">
+                        <img 
+                          src="https://images.unsplash.com/photo-1524661135-423995f22d0b?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+                          alt="Map Error"
+                          className="absolute inset-0 w-full h-full object-cover opacity-30"
+                        />
+                        <div className="relative z-10 bg-white/80 backdrop-blur-sm p-8 rounded-[32px] border border-white shadow-2xl">
+                          <p className="text-xl font-black text-slate-800 mb-3">Oops! Something went wrong.</p>
+                          <p className="text-sm font-bold text-slate-500 max-w-[280px] mx-auto leading-relaxed">
+                            This page didn't load Google Maps correctly. See the JavaScript console for technical details.
+                          </p>
+                        </div>
+                      </div>
                     ) : (
                       <div className="w-full h-full bg-slate-50 flex flex-col items-center justify-center gap-4">
                         <div className="w-12 h-12 border-4 border-sky-200 border-t-sky-600 rounded-full animate-spin"></div>
