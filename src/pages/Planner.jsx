@@ -839,7 +839,7 @@ export default function Planner() {
   };
 
   return (
-    <div className="h-[calc(100vh-20px)] bg-slate-50 font-sans grid grid-cols-[450px_1fr_400px] gap-6 p-6 overflow-hidden no-scrollbar">
+    <div className="min-h-screen lg:h-[calc(100vh-20px)] bg-slate-50 font-sans grid grid-cols-1 lg:grid-cols-[450px_1fr_400px] gap-6 p-4 sm:p-6 overflow-y-auto lg:overflow-hidden no-scrollbar">
 
       <DragDropContext onDragEnd={onDragEnd}>
 
@@ -847,7 +847,7 @@ export default function Planner() {
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl flex flex-col overflow-visible h-[calc(100vh-20px)] relative z-10 border border-slate-200/50"
+          className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl flex flex-col overflow-visible h-[600px] lg:h-[calc(100vh-20px)] relative z-10 border border-slate-200/50"
         >
           {/* Fixed Header */}
           <div className="p-6 pb-2 shrink-0 bg-white/50 backdrop-blur-md z-20 rounded-[40px]">
@@ -1289,7 +1289,7 @@ export default function Planner() {
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="bg-white/60 backdrop-blur-2xl rounded-[40px] shadow-2xl border border-white/50 h-[calc(100vh-70px)] p-8 flex flex-col z-0 relative group/center"
+          className="bg-white/60 backdrop-blur-2xl rounded-[40px] shadow-2xl border border-white/50 h-[500px] lg:h-[calc(100vh-70px)] p-4 sm:p-8 flex flex-col z-0 relative group/center"
         >
           <AnimatePresence mode="wait">
             {selectedPlace ? (
@@ -1566,7 +1566,7 @@ export default function Planner() {
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          className={`bg-white/90 backdrop-blur-xl rounded-[32px] shadow-2xl flex flex-col overflow-hidden h-[calc(100vh-48px)] z-10 transition-all ${isReadOnly ? 'grayscale-[0.5] opacity-60 pointer-events-none' : ''}`}
+          className={`bg-white/90 backdrop-blur-xl rounded-[32px] shadow-2xl flex flex-col overflow-hidden h-[500px] lg:h-[calc(100vh-48px)] z-10 transition-all ${isReadOnly ? 'grayscale-[0.5] opacity-60 pointer-events-none' : ''}`}
         >
           {/* Header & Tabs */}
           <div className="p-6 pb-2 shrink-0 bg-white/50 backdrop-blur-md z-20">

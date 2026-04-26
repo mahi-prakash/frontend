@@ -1039,14 +1039,13 @@ export default function Chat() {
 
       <header className="h-8 flex items-center" />
 
-      <main className="flex-1 w-full px-20">
+      <main className="flex-1 w-full px-4 sm:px-10 lg:px-20 pb-8 lg:pb-0">
         <div
-          className="h-full grid gap-8"
-          style={{ gridTemplateColumns: "64% 36%" }}
+          className="h-full grid grid-cols-1 lg:grid-cols-[64%_36%] gap-8"
         >
           {/* ══════════ CHAT PANEL ══════════ */}
-          <section className="relative z-20">
-            <div className="h-[570px] rounded-[32px] bg-white shadow-2xl border border-slate-100 flex flex-col overflow-visible relative">
+          <section className="relative z-20 h-fit lg:h-full">
+            <div className="h-[500px] lg:h-[570px] rounded-[32px] bg-white shadow-2xl border border-slate-100 flex flex-col overflow-visible relative">
               {/* Header */}
               <div className="px-8 py-6 flex items-center justify-between relative z-30">
                 <div className="flex items-center gap-3">
@@ -1091,11 +1090,11 @@ export default function Chat() {
                 <div className="flex items-center gap-2">
                   {/* Trip selector */}
                   {/* Current Trip Display */}
-                  <div className="flex items-center gap-2 px-5 py-2 rounded-full bg-white border border-slate-200 text-slate-800 text-sm font-semibold shadow-sm shadow-slate-100">
+                  <div className="hidden sm:flex items-center gap-2 px-5 py-2 rounded-full bg-white border border-slate-200 text-slate-800 text-sm font-semibold shadow-sm shadow-slate-100">
                     <span className="text-slate-400 font-medium mr-1">
                       Planning:
                     </span>
-                    <span className="truncate max-w-[120px]">
+                    <span className="truncate max-w-[80px] sm:max-w-[120px]">
                       {tripMeta?.title || tripMeta?.name || "New Trip"}
                     </span>
                   </div>
@@ -1103,7 +1102,7 @@ export default function Chat() {
                   {/* New trip */}
                   <button
                     onClick={handleNewChat}
-                    className="text-sm font-semibold border border-sky-600 text-white bg-sky-600 hover:bg-sky-700 px-4 py-1.5 rounded-full transition shadow-md shadow-sky-100"
+                    className="text-xs sm:text-sm font-semibold border border-sky-600 text-white bg-sky-600 hover:bg-sky-700 px-3 sm:px-4 py-1.5 rounded-full transition shadow-md shadow-sky-100 whitespace-nowrap"
                   >
                     + New Trip
                   </button>
@@ -1187,16 +1186,16 @@ export default function Chat() {
           </section>
 
           {/* ══════════ RIGHT PANEL ══════════ */}
-          <aside>
-            <div className="h-[570px] rounded-[32px] bg-white shadow-2xl border border-slate-100 flex flex-col relative">
+          <aside className="h-fit lg:h-full">
+            <div className="h-[500px] lg:h-[570px] rounded-[32px] bg-white shadow-2xl border border-slate-100 flex flex-col relative">
               {/* Tabs */}
-              <div className="px-11 pt-6 flex justify-between">
-                <div className="flex gap-2 text-s font-semibold">
+              <div className="px-4 sm:px-11 pt-6 flex justify-between overflow-x-auto no-scrollbar">
+                <div className="flex gap-2 text-xs sm:text-s font-semibold whitespace-nowrap">
                   {["itinerary", "places", "nearby"].map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}
-                      className={`px-5.5 py-1.5 rounded-full border transition-all duration-200 ${activeTab === tab
+                      className={`px-3 sm:px-5.5 py-1.5 rounded-full border transition-all duration-200 ${activeTab === tab
                         ? "bg-slate-900 text-white border-slate-800"
                         : "bg-white text-slate-600 border-sky-200 hover:bg-sky-100 hover:border-sky-400"
                         }`}

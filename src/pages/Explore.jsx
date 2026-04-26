@@ -300,9 +300,9 @@ export default function Explore() {
   return (
     <div style={{ fontFamily: "'Segoe UI', system-ui, sans-serif", background: "#f0eff0", minHeight: "100vh", color: "#1a1a1a" }}>
       {/* PAGE */}
-      <div style={{ display: "flex", gap: 32, padding: "16px 5% 32px", minHeight: "calc(100vh - 58px)", alignItems: "flex-start", maxWidth: "1800px", margin: "0 auto" }}>
+      <div className="flex flex-col lg:flex-row gap-8 px-4 sm:px-6 lg:px-[5%] py-4 lg:py-8 min-h-[calc(100vh-58px)] items-start max-w-[1800px] mx-auto">
         {/* SIDEBAR */}
-        <aside style={{ background: "#fff", borderRadius: 16, padding: "24px 20px", width: 240, flexShrink: 0, display: "flex", flexDirection: "column", gap: 20, height: "fit-content", position: "sticky", top: 16 }}>
+        <aside className="bg-white rounded-2xl p-6 w-full lg:w-[240px] flex-shrink-0 flex flex-col gap-5 h-fit lg:sticky lg:top-4">
           <div style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.5px", display: "flex", alignItems: "center", justifyContent: "space-between", color: "#0f172a" }}>
             EXPLORE
             <div style={{ width: 32, height: 32, borderRadius: 10, background: "#f8fafc", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", border: "1px solid #f1f5f9" }}>
@@ -366,7 +366,7 @@ export default function Explore() {
           </div>
 
 
-          <div style={{ marginTop: 5, display: "flex", flexDirection: "column", gap: 8 }}>
+          <div className="mt-5 grid grid-cols-3 lg:grid-cols-1 gap-2">
             <div onClick={() => setActiveTab("discovery")} style={tabStyle(activeTab === "discovery")}>
               <MapPin size={14} /> DISCOVERY
             </div>
@@ -385,31 +385,17 @@ export default function Explore() {
             <div className="bg-white/60 backdrop-blur-xl rounded-[40px] border border-white shadow-xl h-full flex flex-col overflow-hidden">
               <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
                 {/* FIXED SEARCH BAR */}
-                <div style={{
-                  padding: "32px 32px 20px 32px",
-                  background: "rgba(255,255,255,0.4)",
-                  borderBottom: "1px solid rgba(241, 245, 249, 0.5)",
-                  zIndex: 50
-                }}>
-                  <div style={{
-                    background: "#fff",
-                    padding: "14px 24px",
-                    borderRadius: 20,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 14,
-                    boxShadow: "0 8px 30px rgba(0,0,0,0.06)",
-                    border: "1px solid #f1f5f9"
-                  }}>
+                <div className="p-6 sm:p-8 pb-5 bg-white/40 border-b border-slate-100/50 z-50">
+                  <div className="bg-white p-3.5 px-6 rounded-2xl flex items-center gap-3.5 shadow-sm border border-slate-100">
                     <Icon name="search" size={20} color="#94a3b8" />
                     <input
                       type="text"
                       placeholder="Search romantic sunset spots, museum near Day 2..."
-                      style={{ border: "none", outline: "none", flex: 1, fontSize: 15, fontWeight: 600, color: "#1e293b", background: "transparent" }}
+                      className="border-none outline-none flex-1 text-sm sm:text-base font-semibold text-slate-700 bg-transparent"
                       value={search}
                       onChange={e => setSearch(e.target.value)}
                     />
-                    <button style={{ background: "#0f172a", color: "#fff", padding: "10px 24px", borderRadius: 14, fontSize: 13, fontWeight: 800, display: "flex", alignItems: "center", gap: 8, transition: "all 0.2s", boxShadow: "0 4px 12px rgba(15, 23, 42, 0.15)" }} className="hover:bg-slate-800 active:scale-95">
+                    <button className="hidden sm:flex bg-slate-900 text-white px-6 py-2.5 rounded-xl text-xs font-extrabold items-center gap-2 transition-all hover:bg-slate-800 active:scale-95 shadow-md shadow-slate-200">
                       <Filter size={16} /> Refine
                     </button>
                   </div>
