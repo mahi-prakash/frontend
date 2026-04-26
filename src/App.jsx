@@ -1,6 +1,7 @@
 // src/App.jsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
+import { Analytics } from "@vercel/analytics/react";
 
 // Sirf Landing aur Auth eager load hogi (pehli screen)
 import Landing from "./pages/Landing";
@@ -18,21 +19,24 @@ const MainLayout = lazy(() => import("./layouts/MainLayout"));
 
 const App = () => {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-slate-50" />}>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/quiz" element={<Quiz />} />
-        <Route element={<MainLayout />}>
-          <Route path="/explore" element={<Explore />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/bookings" element={<Bookings />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/planner/:tripId?" element={<Planner />} />
+    <>
+      <Suspense fallback={<div className="min-h-screen bg-slate-50" />}>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/quiz" element={<Quiz />} />
+          <Route element={<MainLayout />}>
+            <Route path="/explore" element={<Explore />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/bookings" element={<Bookings />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/planner/:tripId?" element={<Planner />} />
 
-        </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </Suspense>
+          </Route>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
+      <Analytics />
+    </>
   );
 };
 
