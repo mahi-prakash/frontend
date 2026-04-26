@@ -14,6 +14,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Sparkles,
+  Rocket,
   Map as MapIcon,
   Layout,
   Layers,
@@ -1041,7 +1042,7 @@ export default function Planner() {
               </AnimatePresence>
               {/* Empty State for AI Plan */}
               {planMode === 'ai' && displayDayOrder.length === 0 && !isGenerating && (
-                <div className="flex flex-col items-center justify-center py-32 text-center">
+                <div className="flex flex-col items-center justify-center py-25 text-center">
                   <div className="w-16 h-16 bg-sky-50 rounded-full flex items-center justify-center mb-6">
                     <Sparkles className="text-sky-600" size={32} />
                   </div>
@@ -1055,6 +1056,33 @@ export default function Planner() {
                   >
                     Start a Trip in Chat
                   </button>
+                </div>
+              )}
+
+              {/* Empty State for Your Plan */}
+              {planMode === 'user' && displayDayOrder.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-25 text-center">
+                  <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-6">
+                    <Rocket className="text-slate-600" size={32} />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-800 mb-2">Your Plan is Empty</h3>
+                  <p className="text-sm text-slate-500 max-w-xs mb-8">
+                    Start building your journey! You can add places from Explore or head to Chat to let AI generate a reference plan for you.
+                  </p>
+                  <div className="flex gap-4 justify-center items-center">
+                    <button
+                      onClick={() => navigate('/explore')}
+                      className="px-6 py-3 bg-white border border-slate-200 text-slate-700 rounded-full font-bold text-sm hover:bg-slate-50 transition shadow-sm cursor-pointer"
+                    >
+                      Browse Explore
+                    </button>
+                    <button
+                      onClick={() => navigate('/chat')}
+                      className="px-6 py-3 bg-slate-900 text-white rounded-full font-bold text-sm hover:bg-slate-800 transition shadow-lg shadow-slate-200 cursor-pointer"
+                    >
+                      Ask AI in Chat
+                    </button>
+                  </div>
                 </div>
               )}
 
@@ -1254,7 +1282,7 @@ export default function Planner() {
                                 {provided.placeholder}
 
                                 {(day.items?.length || 0) === 0 && (
-                                  <div 
+                                  <div
                                     onClick={() => navigate('/explore')}
                                     className="cursor-pointer group flex flex-col items-center justify-center py-8 border-2 border-dashed border-slate-200/60 rounded-2xl bg-slate-50/50 hover:bg-sky-50 hover:border-sky-200 transition-all"
                                   >
