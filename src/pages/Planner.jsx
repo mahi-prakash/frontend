@@ -1039,6 +1039,25 @@ export default function Planner() {
                   </motion.div>
                 )}
               </AnimatePresence>
+              {/* Empty State for AI Plan */}
+              {planMode === 'ai' && displayDayOrder.length === 0 && !isGenerating && (
+                <div className="flex flex-col items-center justify-center py-32 text-center">
+                  <div className="w-16 h-16 bg-sky-50 rounded-full flex items-center justify-center mb-6">
+                    <Sparkles className="text-sky-600" size={32} />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-800 mb-2">No AI Plan Yet</h3>
+                  <p className="text-sm text-slate-500 max-w-xs mb-8">
+                    Go to Chat to start a new trip and let our AI craft a perfect itinerary for you!
+                  </p>
+                  <button
+                    onClick={() => navigate('/chat')}
+                    className="px-8 py-3 bg-slate-900 text-white rounded-full font-bold text-sm hover:bg-slate-800 transition shadow-lg shadow-slate-200 cursor-pointer"
+                  >
+                    Start a Trip in Chat
+                  </button>
+                </div>
+              )}
+
               {visibleDays.map((dayId, dayIdx) => {
                 const day = displayDays[dayId];
                 if (!day) return null;
