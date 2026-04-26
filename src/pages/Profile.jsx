@@ -1034,15 +1034,15 @@ const ProfileDashboard = ({ user }) => {
                         </GoogleMap>
                       ) : loadError ? (
                         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '24px', backgroundColor: '#f1f5f9', overflow: 'hidden', borderRadius: '20px' }}>
-                          <img 
-                            src="https://images.unsplash.com/photo-1524661135-423995f22d0b?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+                          <img
+                            src="https://images.unsplash.com/photo-1524661135-423995f22d0b?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                             alt="Map Error"
                             style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.3 }}
                           />
                           <div style={{ position: 'relative', zIndex: 10, backgroundColor: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(8px)', padding: '24px', borderRadius: '24px', border: '1px solid white', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}>
                             <p style={{ fontSize: '1.1rem', fontWeight: 900, color: '#1e293b', marginBottom: '8px' }}>Oops! Something went wrong.</p>
                             <p style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', maxWidth: '240px', margin: '0 auto', lineHeight: 1.5 }}>
-                              This page didn't load Google Maps correctly. See the JavaScript console for technical details.
+                              This page didn't load Google Maps.
                             </p>
                           </div>
                         </div>
