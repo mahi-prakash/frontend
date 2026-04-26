@@ -14,6 +14,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Sparkles,
+  Rocket,
   Map as MapIcon,
   Layout,
   Layers,
@@ -54,6 +55,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTrip } from '../context/TripContext';
 import { useUser } from '../context/UserContext';
 import Dropdown from '../components/common/Dropdown';
+import { GOOGLE_MAPS_API_KEY } from '../utils/googleMaps';
+
 const containerStyle = {
   width: "100%",
   height: "100%",
@@ -254,11 +257,9 @@ const parseTimeToMinutes = (timeStr) => {
 // --- Main Component ---
 
 export default function Planner() {
-  console.log("🏗️ [Planner] Component Rendered");
 
   // 🧪 Mount Pulse
   useEffect(() => {
-    console.log("✅ [Planner] Lifecycle: MOUNTED");
     // alert("Planner Engine Initialized! 🚀"); // Removed to avoid annoying popups if it works fast
   }, []);
 
@@ -269,15 +270,24 @@ export default function Planner() {
   // 🗺️ Initialize Google Maps Engine
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
     libraries: ['places']
   });
+
+  const [mapAuthFailed, setMapAuthFailed] = useState(false);
+
+  useEffect(() => {
+    // 🛡️ Catch Google Maps Auth Failures (e.g. invalid API key)
+    window.gm_authFailure = () => {
+      console.error("❌ [Google Maps] Authentication Failure");
+      setMapAuthFailed(true);
+    };
+  }, []);
 
   if (loadError) {
     console.error("❌ [Google Maps] Load Error:", loadError);
   }
 
-  console.log("🗺️ [Map] Loading State:", isLoaded);
 
   const [map, setMap] = useState(null);
 
@@ -331,21 +341,15 @@ export default function Planner() {
 
     // 🛡️ HARD STOP: If this specific trip is already initialized in state, DO NOT OVERWRITE
     if (hasInitializedRef.current === activeTripId) {
-      console.log("🛡️ [Planner] Guard: Trip already initialized. Protecting local edits.");
       return;
     }
 
-    console.log("📡 [Planner] Initializing working itinerary for trip:", activeTripId);
-    
+
     const dbItinerary = activeTrip?.itinerary;
     const cachedItinerary = (itineraryCache || {})[activeTripId];
     const sourceItinerary = dbItinerary || cachedItinerary;
 
-    console.log("🔍 [Planner] Source check:", { 
-      hasDb: !!dbItinerary, 
-      hasCache: !!cachedItinerary,
-      isSourceNull: sourceItinerary === null
-    });
+
 
     const hasDays = sourceItinerary?.days && (
       Array.isArray(sourceItinerary.days)
@@ -382,7 +386,6 @@ export default function Planner() {
       hasInitializedRef.current = activeTripId;
     } else if (activeTrip?.ai_itinerary && sourceItinerary === null) {
       // 🛡️ ONLY seed from AI if Your Plan (itinerary) is ABSOLUTELY null (never touched)
-      console.log("🪄 [Planner] Seeding Your Plan from AI version (First time only)");
       const aiDays = activeTrip.ai_itinerary.days || {};
       const normalizedAi = {};
 
@@ -428,7 +431,6 @@ export default function Planner() {
     if (planMode !== 'user' || !activeTripId || Object.keys(days).length === 0) return;
 
     const timer = setTimeout(() => {
-      console.log("💾 [Auto-Save] Syncing itinerary to backend...");
       updateTripItinerary(activeTripId, { days });
     }, 2000); // Wait 2 seconds of inactivity before saving
 
@@ -623,7 +625,6 @@ export default function Planner() {
       return;
     }
 
-    console.log("🪄 [Planner] Restoring to AI version...");
     const aiDays = activeTrip.ai_itinerary.days || {};
     const normalizedAi = {};
 
@@ -848,7 +849,7 @@ export default function Planner() {
   };
 
   return (
-    <div className="h-[calc(100vh-20px)] bg-slate-50 font-sans grid grid-cols-[450px_1fr_400px] gap-6 p-6 overflow-hidden no-scrollbar">
+    <div className="min-h-screen lg:h-[calc(100vh-20px)] bg-slate-50 font-sans grid grid-cols-1 lg:grid-cols-[450px_1fr_400px] gap-6 p-4 sm:p-6 overflow-y-auto lg:overflow-hidden no-scrollbar">
 
       <DragDropContext onDragEnd={onDragEnd}>
 
@@ -856,7 +857,7 @@ export default function Planner() {
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl flex flex-col overflow-visible h-[calc(100vh-20px)] relative z-10 border border-slate-200/50"
+          className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl flex flex-col overflow-visible h-[600px] lg:h-[calc(100vh-20px)] relative z-10 border border-slate-200/50"
         >
           {/* Fixed Header */}
           <div className="p-6 pb-2 shrink-0 bg-white/50 backdrop-blur-md z-20 rounded-[40px]">
@@ -869,7 +870,7 @@ export default function Planner() {
                   {/* Current Trip Display */}
                   <div className="flex items-center gap-1.5 px-0.5 py-0.5">
                     <span className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">
-                      {activeTrip?.title || activeTrip?.name || "New Trip"}
+                      {"(" + (activeTrip?.title || activeTrip?.name || "New Trip") + ")"}
                     </span>
                   </div>
                 </div>
@@ -1036,8 +1037,8 @@ export default function Planner() {
                       </div>
                     ))}
 
-                    <div className="absolute inset-x-0 bottom-10 flex flex-col items-center gap-3">
-                      <div className="flex items-center gap-2 px-4 py-2 bg-sky-600 text-white rounded-full text-xs font-bold shadow-xl animate-bounce">
+                    <div className="absolute inset-x-0 bottom-60 flex flex-col items-center gap-3">
+                      <div className="flex items-center gap-2 px-4 py-3 bg-sky-600 text-white rounded-full text-sm font-bold shadow-xl animate-bounce">
                         <Sparkles size={14} className="animate-spin-slow" />
                         AI is crafting your journey...
                       </div>
@@ -1048,6 +1049,52 @@ export default function Planner() {
                   </motion.div>
                 )}
               </AnimatePresence>
+              {/* Empty State for AI Plan */}
+              {planMode === 'ai' && displayDayOrder.length === 0 && !isGenerating && (
+                <div className="flex flex-col items-center justify-center py-25 text-center">
+                  <div className="w-16 h-16 bg-sky-50 rounded-full flex items-center justify-center mb-6">
+                    <Sparkles className="text-sky-600" size={32} />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-800 mb-2">No AI Plan Yet</h3>
+                  <p className="text-sm text-slate-500 max-w-xs mb-8">
+                    Go to Chat to start a new trip and let our AI craft a perfect itinerary for you!
+                  </p>
+                  <button
+                    onClick={() => navigate('/chat')}
+                    className="px-8 py-3 bg-slate-900 text-white rounded-full font-bold text-sm hover:bg-slate-800 transition shadow-lg shadow-slate-200 cursor-pointer"
+                  >
+                    Start a Trip in Chat
+                  </button>
+                </div>
+              )}
+
+              {/* Empty State for Your Plan */}
+              {planMode === 'user' && displayDayOrder.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-10 text-center">
+                  <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-6">
+                    <Rocket className="text-slate-600" size={32} />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-800 mb-2">Your Plan is Empty</h3>
+                  <p className="text-sm text-slate-500 max-w-xs mb-8">
+                    Start building your journey! You can add places from Explore or head to Chat to let AI generate a reference plan for you.
+                  </p>
+                  <div className="flex gap-4 justify-center items-center">
+                    <button
+                      onClick={() => navigate('/explore')}
+                      className="px-6 py-3 bg-white border border-slate-200 text-slate-700 rounded-full font-bold text-sm hover:bg-slate-50 transition shadow-sm cursor-pointer"
+                    >
+                      Browse Explore
+                    </button>
+                    <button
+                      onClick={() => navigate('/chat')}
+                      className="px-6 py-3 bg-slate-900 text-white rounded-full font-bold text-sm hover:bg-slate-800 transition shadow-lg shadow-slate-200 cursor-pointer"
+                    >
+                      Ask AI in Chat
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {visibleDays.map((dayId, dayIdx) => {
                 const day = displayDays[dayId];
                 if (!day) return null;
@@ -1086,6 +1133,10 @@ export default function Planner() {
                                   }`}
                               >
                                 {day.items?.map((item, index) => {
+                                  const isLastInDay = index === (day.items?.length || 1) - 1;
+                                  const isLastDay = dayId === displayDayOrder[displayDayOrder.length - 1];
+                                  const Icon = getItemIcon(item.type?.toLowerCase());
+
                                   return (
                                     <Draggable key={item.id} draggableId={item.id} index={index} isDragDisabled={isReadOnly}>
                                       {(provided, snapshot) => (
@@ -1093,127 +1144,145 @@ export default function Planner() {
                                           ref={provided.innerRef}
                                           {...provided.draggableProps}
                                           {...provided.dragHandleProps}
-                                          onClick={() => setSelectedPlace(item)}
-                                          onMouseEnter={() => setHoveredMarkerId(item.id)}
-                                          onMouseLeave={() => setHoveredMarkerId(null)}
-                                          className={`group relative flex flex-col bg-white rounded-2xl px-6 py-4 shadow-xl border border-sky-100 hover:shadow-2xl transition-all mb-4 cursor-pointer ${snapshot.isDragging ? "rotate-2 scale-105 z-50 shadow-2xl ring-2 ring-sky-400" : ""
-                                            } ${selectedPlace?.id === item.id ? "ring-2 ring-sky-400 shadow-md" : ""}`}
+                                          className="flex gap-4 items-stretch"
                                         >
-                                          {/* 🔹 TOP ROW: Image + Essential Info */}
-                                          <div className="flex gap-4">
-                                            {/* Image Thumbnail */}
-                                            <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-slate-100 relative shadow-sm border border-slate-100">
-                                              <img
-                                                src={item.img || `https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=200&auto=format&fit=crop`}
-                                                alt={item.title}
-                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                              />
+                                          {/* ── TIMELINE COLUMN ── */}
+                                          <div className="flex flex-col items-center">
+                                            <div className="h-5 w-5 rounded-full border-2 border-sky-600 bg-sky-50 flex items-center justify-center shrink-0 mt-4">
+                                              <Icon size={10} className="text-sky-600" />
                                             </div>
-
-                                            {/* Content Area */}
-                                            <div className="flex-1 min-w-0">
-                                              <div className="flex items-center gap-2 text-[10px] text-sky-600 font-bold uppercase tracking-wider mb-1">
-                                                {editingTimeId === item.id ? (
-                                                  <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                                                    <input
-                                                      type="text"
-                                                      autoFocus
-                                                      className="w-20 px-2 py-0.5 text-[10px] font-bold text-sky-600 bg-white border border-sky-200 rounded-lg outline-none ring-2 ring-sky-50 shadow-sm"
-                                                      defaultValue={item.time}
-                                                      onKeyDown={(e) => {
-                                                        if (e.key === 'Enter') updateItemTime(dayId, item.id, e.target.value);
-                                                        if (e.key === 'Escape') setEditingTimeId(null);
-                                                      }}
-                                                      onBlur={(e) => updateItemTime(dayId, item.id, e.target.value)}
-                                                    />
-                                                  </div>
-                                                ) : (
-                                                  <span
-                                                    onClick={(e) => {
-                                                      if (!isReadOnly) {
-                                                        e.stopPropagation();
-                                                        setEditingTimeId(item.id);
-                                                      }
-                                                    }}
-                                                    className="hover:text-sky-400 transition-colors"
-                                                  >
-                                                    {item.time || "No Time"}
-                                                  </span>
-                                                )}
-                                                <span>•</span>
-                                                <div className="flex items-center gap-1">
-                                                  {(item.type === 'Hotel' || item.type === 'HOTEL') && <Hotel size={10} className="text-amber-500" />}
-                                                  {(item.type === 'Food' || item.type === 'FOOD') && <Utensils size={10} className="text-emerald-500" />}
-                                                  {(item.type === 'Sightseeing' || item.type === 'SIGHTSEEING' || item.type === 'ACTIVITY') && <Camera size={10} className="text-sky-500" />}
-                                                  {(item.type === 'FLIGHT' || item.type === 'DEPARTURE' || item.type === 'ARRIVAL') && <Plane size={10} className="text-blue-500" />}
-                                                  {(item.type === 'TRANSPORT') && <Navigation size={10} className="text-slate-500" />}
-                                                  <span className="capitalize">{item.type?.toLowerCase() || "Activity"}</span>
-                                                </div>
-                                              </div>
-
-                                              <h4 className="font-bold text-slate-800 text-[14px] leading-tight group-hover:text-sky-700 transition-colors">{item.title}</h4>
-
-                                              <p className="text-[11px] text-slate-400 truncate mt-1 flex items-center gap-1 font-medium">
-                                                <MapPin size={10} className="text-slate-300" /> {item.location}
-                                              </p>
-
-                                              {item.price_range && (
-                                                <div className="flex items-center gap-1 text-[11px] font-bold text-slate-600 mt-1">
-                                                  <DollarSign size={10} className="text-slate-400" />
-                                                  {item.price_range}
-                                                </div>
-                                              )}
-                                            </div>
-
-                                            {/* Action Buttons */}
-                                            {!isReadOnly && (
-                                              <button
-                                                className="opacity-0 group-hover:opacity-100 p-1.5 rounded-full text-slate-300 hover:text-rose-500 hover:bg-rose-50 transition-all self-start"
-                                                onClick={(e) => {
-                                                  e.stopPropagation();
-                                                  deleteItem(dayId, item.id);
-                                                }}
-                                              >
-                                                <Trash2 size={13} />
-                                              </button>
+                                            {(!isLastInDay || !isLastDay) && (
+                                              <div className="flex-1 w-px border-l-2 border-dotted border-sky-300 mt-1" />
                                             )}
                                           </div>
 
-                                          {/* 🔥 BOTTOM ROW: Full-width Booking Hint Strip */}
-                                          {item.booking_hint && (
-                                            <div className="mt-4 p-3 rounded-xl bg-sky-50 border border-sky-100/50 flex items-start gap-2.5 shadow-sm group-hover:bg-sky-100/30 transition-colors">
-                                              <Sparkles size={14} className="text-sky-500 shrink-0 mt-0.5" />
-                                              <p className="text-[10px] text-sky-800 leading-relaxed font-semibold italic">
-                                                {item.booking_hint}
-                                              </p>
-                                            </div>
-                                          )}
+                                          {/* ── ACTIVITY CARD ── */}
+                                          <div
+                                            onClick={() => setSelectedPlace(item)}
+                                            onMouseEnter={() => setHoveredMarkerId(item.id)}
+                                            onMouseLeave={() => setHoveredMarkerId(null)}
+                                            className={`group relative flex-1 flex flex-col bg-white rounded-2xl px-6 py-4 shadow-xl border border-sky-100 hover:shadow-2xl hover:-translate-y-1 transition-all mb-4 cursor-pointer ${snapshot.isDragging ? "rotate-2 scale-105 z-50 shadow-2xl ring-2 ring-sky-400" : ""
+                                              } ${selectedPlace?.id === item.id ? "ring-2 ring-sky-400 shadow-md" : ""}`}
+                                          >
 
-                                          {/* ⭐️ RATING UI - Unlocked when trip is completed */}
-                                          {isCompleted && (
-                                            <div className="flex items-center gap-0.5 mt-3 pt-3 border-t border-slate-50" onClick={(e) => e.stopPropagation()}>
-                                              {[1, 2, 3, 4, 5].map((star) => (
+
+
+                                            {/* 🔹 TOP ROW: Image + Essential Info */}
+                                            <div className="flex gap-4">
+                                              {/* Image Thumbnail */}
+                                              <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-slate-100 relative shadow-sm border border-slate-100">
+                                                <img
+                                                  src={item.img || `https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=200&auto=format&fit=crop`}
+                                                  alt={item.title}
+                                                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                                />
+                                              </div>
+
+                                              {/* Content Area */}
+                                              <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-2 text-[10px] text-sky-600 font-bold uppercase tracking-wider mb-1">
+                                                  {editingTimeId === item.id ? (
+                                                    <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                                                      <input
+                                                        type="text"
+                                                        autoFocus
+                                                        className="w-20 px-2 py-0.5 text-[10px] font-bold text-sky-600 bg-white border border-sky-200 rounded-lg outline-none ring-2 ring-sky-50 shadow-sm"
+                                                        defaultValue={item.time}
+                                                        onKeyDown={(e) => {
+                                                          if (e.key === 'Enter') updateItemTime(dayId, item.id, e.target.value);
+                                                          if (e.key === 'Escape') setEditingTimeId(null);
+                                                        }}
+                                                        onBlur={(e) => updateItemTime(dayId, item.id, e.target.value)}
+                                                      />
+                                                    </div>
+                                                  ) : (
+                                                    <span
+                                                      onClick={(e) => {
+                                                        if (!isReadOnly) {
+                                                          e.stopPropagation();
+                                                          setEditingTimeId(item.id);
+                                                        }
+                                                      }}
+                                                      className="hover:text-sky-400 transition-colors"
+                                                    >
+                                                      {item.time || "No Time"}
+                                                    </span>
+                                                  )}
+                                                  <span>•</span>
+                                                  <div className="flex items-center gap-1">
+                                                    {(item.type === 'Hotel' || item.type === 'HOTEL') && <Hotel size={10} className="text-amber-500" />}
+                                                    {(item.type === 'Food' || item.type === 'FOOD') && <Utensils size={10} className="text-emerald-500" />}
+                                                    {(item.type === 'Sightseeing' || item.type === 'SIGHTSEEING' || item.type === 'ACTIVITY') && <Camera size={10} className="text-sky-500" />}
+                                                    {(item.type === 'FLIGHT' || item.type === 'DEPARTURE' || item.type === 'ARRIVAL') && <Plane size={10} className="text-blue-500" />}
+                                                    {(item.type === 'TRANSPORT') && <Navigation size={10} className="text-slate-500" />}
+                                                    <span className="capitalize">{item.type?.toLowerCase() || "Activity"}</span>
+                                                  </div>
+                                                </div>
+
+                                                <h4 className="font-bold text-slate-800 text-[14px] leading-tight group-hover:text-sky-700 transition-colors">{item.title}</h4>
+
+                                                <p className="text-[11px] text-slate-400 truncate mt-1 flex items-center gap-1 font-medium">
+                                                  <MapPin size={10} className="text-slate-300" /> {item.location}
+                                                </p>
+
+                                                {item.price_range && (
+                                                  <div className="flex items-center gap-1 text-[11px] font-bold text-slate-600 mt-1">
+                                                    <DollarSign size={10} className="text-slate-400" />
+                                                    {item.price_range}
+                                                  </div>
+                                                )}
+                                              </div>
+
+                                              {/* Action Buttons */}
+                                              {!isReadOnly && (
                                                 <button
-                                                  key={star}
-                                                  onClick={() => {
-                                                    setReviewingItem({ ...item, dayId });
-                                                    setReviewForm(prev => ({ ...prev, rating: star }));
+                                                  className="opacity-40 group-hover:opacity-100 p-3 rounded-full text-slate-400 hover:text-rose-500 hover:bg-rose-50 transition-all self-start"
+                                                  onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    deleteItem(dayId, item.id);
                                                   }}
-                                                  className="p-0.5 transition-transform hover:scale-125"
                                                 >
-                                                  <Star
-                                                    size={14}
-                                                    fill={(item.rating || 0) >= star ? "#fbbf24" : "transparent"}
-                                                    stroke={(item.rating || 0) >= star ? "#fbbf24" : "#cbd5e1"}
-                                                    strokeWidth={2.5}
-                                                  />
+                                                  <Trash2 size={15} />
                                                 </button>
-                                              ))}
-                                              {item.rating > 0 && (
-                                                <span className="text-[10px] font-black text-amber-500 ml-1">{item.rating}.0</span>
                                               )}
                                             </div>
-                                          )}
+
+                                            {/* 🔥 BOTTOM ROW: Full-width Booking Hint Strip */}
+                                            {item.booking_hint && (
+                                              <div className="mt-4 p-3 rounded-xl bg-sky-50 border border-sky-100/50 flex items-start gap-2.5 shadow-sm group-hover:bg-sky-100/30 transition-colors">
+                                                <Sparkles size={14} className="text-sky-500 shrink-0 mt-0.5" />
+                                                <p className="text-[10px] text-sky-800 leading-relaxed font-semibold italic">
+                                                  {item.booking_hint}
+                                                </p>
+                                              </div>
+                                            )}
+
+                                            {/* ⭐️ RATING UI - Unlocked when trip is completed */}
+                                            {isCompleted && (
+                                              <div className="flex items-center gap-0.5 mt-3 pt-3 border-t border-slate-50" onClick={(e) => e.stopPropagation()}>
+                                                {[1, 2, 3, 4, 5].map((star) => (
+                                                  <button
+                                                    key={star}
+                                                    onClick={() => {
+                                                      setReviewingItem({ ...item, dayId });
+                                                      setReviewForm(prev => ({ ...prev, rating: star }));
+                                                    }}
+                                                    className="p-0.5 transition-transform hover:scale-125"
+                                                  >
+                                                    <Star
+                                                      size={14}
+                                                      fill={(item.rating || 0) >= star ? "#fbbf24" : "transparent"}
+                                                      stroke={(item.rating || 0) >= star ? "#fbbf24" : "#cbd5e1"}
+                                                      strokeWidth={2.5}
+                                                    />
+                                                  </button>
+                                                ))}
+                                                {item.rating > 0 && (
+                                                  <span className="text-[10px] font-black text-amber-500 ml-1">{item.rating}.0</span>
+                                                )}
+                                              </div>
+                                            )}
+                                          </div>
                                         </div>
                                       )}
                                     </Draggable>
@@ -1222,11 +1291,16 @@ export default function Planner() {
                                 {provided.placeholder}
 
                                 {(day.items?.length || 0) === 0 && (
-                                  <div className="flex flex-col items-center justify-center py-6 border-2 border-dashed border-slate-200/60 rounded-2xl bg-slate-50/50">
-                                    <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-300 mb-2">
-                                      <Plus size={16} />
+                                  <div
+                                    onClick={() => navigate('/explore')}
+                                    className="cursor-pointer group flex flex-col items-center justify-center py-8 border-2 border-dashed border-slate-200/60 rounded-2xl bg-slate-50/50 hover:bg-sky-50 hover:border-sky-200 transition-all"
+                                  >
+                                    <div className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-slate-300 group-hover:text-sky-500 transition-colors mb-3">
+                                      <Search size={18} />
                                     </div>
-                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wide">Drag places here</p>
+                                    <p className="text-[10px] text-slate-400 font-extrabold uppercase tracking-widest group-hover:text-sky-600 transition-colors">
+                                      Go to explore to add places
+                                    </p>
                                   </div>
                                 )}
                               </div>
@@ -1238,31 +1312,25 @@ export default function Planner() {
                   </div>
                 );
               })}
-              {!isReadOnly && (
-                <button
-                  onClick={addDay}
-                  className="w-full py-4 rounded-2xl border-2 border-dashed border-slate-200 text-slate-400 hover:text-sky-600 hover:border-sky-300 hover:bg-sky-50 transition-all font-black text-[11px] uppercase tracking-wider flex items-center justify-center gap-2 group mb-6"
-                >
-                  <Plus size={16} className="group-hover:rotate-90 transition-transform duration-300" />
-                  Add Day to Plan
-                </button>
-              )}
+
             </div>
           </div>
           <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-28 z-0 bg-gradient-to-t from-white via-white/90 to-transparent rounded-b-[32px]" />
 
-          <div className="absolute bottom-5 left-0 right-0 flex justify-center z-50">
-            <button
-              onClick={() => setIsCompleted(!isCompleted)}
-              className={`w-1/2 max-w-[260px] py-3 rounded-2xl text-[12px] font-black flex items-center justify-center gap-2 border-2 transition-all duration-300 ${isCompleted
-                ? 'bg-emerald-500 text-white border-emerald-500'
-                : 'bg-transparent text-sky-500 border-sky-400/40 opacity-70 hover:opacity-100 hover:text-sky-700 hover:border-sky-600 hover:bg-sky-50'
-                }`}
-            >
-              <CheckCircle2 size={16} strokeWidth={3} />
-              {isCompleted ? 'TRIP COMPLETED' : 'COMPLETE JOURNEY'}
-            </button>
-          </div>
+          {displayDayOrder.length > 0 && (
+            <div className="absolute bottom-5 left-0 right-0 flex justify-center z-50">
+              <button
+                onClick={() => setIsCompleted(!isCompleted)}
+                className={`w-1/2 max-w-[260px] py-3 rounded-2xl text-[12px] font-black flex items-center justify-center gap-2 border-2 transition-all duration-300 ${isCompleted
+                  ? 'bg-emerald-500 text-white border-emerald-500'
+                  : 'bg-transparent text-sky-500 border-sky-400/40 opacity-70 hover:opacity-100 hover:text-sky-700 hover:border-sky-600 hover:bg-sky-50'
+                  }`}
+              >
+                <CheckCircle2 size={16} strokeWidth={3} />
+                {isCompleted ? 'TRIP COMPLETED' : 'COMPLETE JOURNEY'}
+              </button>
+            </div>
+          )}
 
         </motion.div>
 
@@ -1271,7 +1339,7 @@ export default function Planner() {
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="bg-white/60 backdrop-blur-2xl rounded-[40px] shadow-2xl border border-white/50 h-[calc(100vh-70px)] p-8 flex flex-col z-0 relative group/center"
+          className="bg-white/60 backdrop-blur-2xl rounded-[40px] shadow-2xl border border-white/50 h-[500px] lg:h-[calc(100vh-70px)] p-4 sm:p-8 flex flex-col z-0 relative group/center"
         >
           <AnimatePresence mode="wait">
             {selectedPlace ? (
@@ -1413,7 +1481,7 @@ export default function Planner() {
                 <div className="w-full h-full flex flex-col bg-white rounded-[24px] overflow-hidden shadow-sm ring-1 ring-black/5">
                   {/* 1. VISUAL CARD (Map) */}
                   <div className="flex-1 relative z-0">
-                    {isLoaded ? (
+                    {isLoaded && !mapAuthFailed ? (
                       <GoogleMap
                         mapContainerStyle={containerStyle}
                         center={mapMarkers.length > 0 ? { lat: mapMarkers[0].pos[0], lng: mapMarkers[0].pos[1] } : { lat: 48.8566, lng: 2.3522 }}
@@ -1468,9 +1536,7 @@ export default function Planner() {
 
                         {/* 3. Numbered Markers */}
                         {(() => {
-                          if (mapMarkers.length > 0) {
-                            console.log(`📍 [Map] Rendering ${mapMarkers.length} journey pins`);
-                          }
+
                           return mapMarkers.map((marker) => (
                             <MarkerF
                               key={`${marker.dayId}-${marker.id}-${marker.number}`}
@@ -1489,6 +1555,14 @@ export default function Planner() {
                           ));
                         })()}
                       </GoogleMap>
+                    ) : (loadError || mapAuthFailed) ? (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center text-center bg-slate-100 overflow-hidden rounded-[24px]">
+                        <img
+                          src="https://images.unsplash.com/photo-1524661135-423995f22d0b?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                          alt="Map Error"
+                          className="absolute inset-0 w-full h-full object-cover"
+                        />
+                      </div>
                     ) : (
                       <div className="w-full h-full bg-slate-50 flex flex-col items-center justify-center gap-4">
                         <div className="w-12 h-12 border-4 border-sky-200 border-t-sky-600 rounded-full animate-spin"></div>
@@ -1550,7 +1624,7 @@ export default function Planner() {
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          className={`bg-white/90 backdrop-blur-xl rounded-[32px] shadow-2xl flex flex-col overflow-hidden h-[calc(100vh-48px)] z-10 transition-all ${isReadOnly ? 'grayscale-[0.5] opacity-60 pointer-events-none' : ''}`}
+          className={`bg-white/90 backdrop-blur-xl rounded-[32px] shadow-2xl flex flex-col overflow-hidden h-[500px] lg:h-[calc(100vh-48px)] z-10 transition-all ${isReadOnly ? 'grayscale-[0.5] opacity-60 pointer-events-none' : ''}`}
         >
           {/* Header & Tabs */}
           <div className="p-6 pb-2 shrink-0 bg-white/50 backdrop-blur-md z-20">

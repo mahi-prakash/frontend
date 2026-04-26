@@ -9,8 +9,10 @@ import Footer from "../components/stories/Footer";
 import SectionSpacer from "../components/stories/SectionSpacer";
 import {
   Search, Grid, Music, BookOpen, Heart,
-  MapPin, Star, Filter, ChevronRight, X
+  MapPin, Star, Filter, ChevronRight, X, Check, ArrowLeft
 } from "lucide-react";
+
+
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
 const DATA = {
@@ -36,8 +38,8 @@ const DATA = {
       reviews: 240,
       description: "A serene walk through towering stalks of green bamboo that filter the sunlight into emerald hues.",
       badge: "MUST VISIT",
-      sceneGradient: "linear-gradient(135deg, #a8e063 0%, #56ab2f 100%)",
-      avatars: [{ color: "#ff6b6b", initials: "JS" }, { color: "#4ecdc4", initials: "MK" }],
+      sceneGradient: "linear-gradient(135deg, #001219ff 0%, #004c43ff 100%)",
+      avatars: [{ color: "#680505ff", initials: "JS" }, { color: "#203635ff", initials: "MK" }],
       reels: [{ author: "@nomad_jess", likes: "12.4k", saves: "84", caption: "Found the hidden shrine behind the bamboo forest. Literally zen. #hiddenjapan #kyoto" }]
     },
     {
@@ -51,8 +53,8 @@ const DATA = {
       reviews: 1850,
       description: "The world's busiest pedestrian crossing, a neon-lit symphony of movement and urban energy.",
       badge: "ICONIC",
-      sceneGradient: "linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)",
-      avatars: [{ color: "#f7d794", initials: "TW" }],
+      sceneGradient: "linear-gradient(135deg, #2b0059ff 0%, #003591ff 100%)",
+      avatars: [{ color: "#eda200ff", initials: "TW" }],
       reels: [{ author: "@city_lights", likes: "45k", saves: "1.2k", caption: "The heart of Tokyo never stops beating. 🌃 #shibuya #tokyo" }]
     },
     {
@@ -66,8 +68,8 @@ const DATA = {
       reviews: 95,
       description: "A hidden cafe in a converted warehouse serving artisanal coffee and local pastries.",
       badge: "LOCAL FAVORITE",
-      sceneGradient: "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)",
-      avatars: [{ color: "#a29bfe", initials: "RL" }, { color: "#55efc4", initials: "DS" }],
+      sceneGradient: "linear-gradient(135deg, #800509ff 0%, #802061ff 100%)",
+      avatars: [{ color: "#2e2a67ff", initials: "RL" }, { color: "#255548ff", initials: "DS" }],
       reels: [{ author: "@coffee_hunter", likes: "8.2k", saves: "450", caption: "The best latte art in Osaka, hidden in plain sight. ☕️ #osaka #cafeculture" }]
     },
     {
@@ -82,7 +84,7 @@ const DATA = {
       description: "Intricately raked gravel and perfectly placed stones designed for deep meditation.",
       badge: "TOP RATED",
       sceneGradient: "linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%)",
-      avatars: [{ color: "#fab1a0", initials: "OM" }],
+      avatars: [{ color: "#8f260eff", initials: "OM" }],
       reels: [{ author: "@zen_traveler", likes: "15k", saves: "900", caption: "Finding peace in the patterns of silence. 🙏 #zen #kyoto" }]
     },
     {
@@ -97,7 +99,7 @@ const DATA = {
       description: "A breathtaking Zen temple whose top two floors are completely covered in gold leaf.",
       badge: "LEGENDARY",
       sceneGradient: "linear-gradient(135deg, #f6d365 0%, #fda085 100%)",
-      avatars: [{ color: "#fd79a8", initials: "AP" }],
+      avatars: [{ color: "#86143cff", initials: "AP" }],
       reels: [{ author: "@gold_rush", likes: "32k", saves: "2.1k", caption: "Pure gold reflecting on the water. A dream. ✨ #kinkakuji #kyoto" }]
     },
     {
@@ -112,7 +114,7 @@ const DATA = {
       description: "The street food capital of the world, alive with neon signs and giant crab sculptures.",
       badge: "FOODIE HEAVEN",
       sceneGradient: "linear-gradient(135deg, #ff0844 0%, #ffb199 100%)",
-      avatars: [{ color: "#00cec9", initials: "TK" }],
+      avatars: [{ color: "#10504fff", initials: "TK" }],
       reels: [{ author: "@street_eats", likes: "19k", saves: "3k", caption: "Takoyaki at midnight is a spiritual experience. 🐙 #dotonbori #osaka" }]
     },
   ]
@@ -148,7 +150,6 @@ const UnsplashImage = ({ query, alt, style }) => {
   useEffect(() => {
     if (query) {
       fetchPhoto(query).then(u => {
-        console.log(`Unsplash [${query}]:`, u);
         setUrl(u);
       });
     }
@@ -162,8 +163,6 @@ const UnsplashImage = ({ query, alt, style }) => {
 const CardScene = ({ gradient, height = 150, query, title }) => (
   <div style={{ background: gradient, width: "100%", height, position: "relative", overflow: "hidden" }}>
     <UnsplashImage query={query || title} alt={title} style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0, zIndex: 1 }} />
-    <div style={{ position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)", width: 16, height: "100%", background: "#252525", zIndex: 2 }} />
-    <div style={{ position: "absolute", bottom: "14%", left: "50%", transform: "translateX(-50%)", width: 2, height: "26%", background: "#e8c830", zIndex: 3 }} />
   </div>
 );
 
@@ -222,8 +221,9 @@ const PlaceCard = ({ place, liked, onLike, onOpen }) => (
 export default function Explore() {
   const [activeTab, setActiveTab] = useState("discovery"); // discovery, reels, stories
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("all");
-  const [mood, setMood] = useState("all");
+  const [selectedCategories, setSelectedCategories] = useState(["all"]);
+  const [selectedMoods, setSelectedMoods] = useState(["all"]);
+
   const [likedCards, setLikedCards] = useState(new Set());
   const [activeReel, setActiveReel] = useState(null);
 
@@ -238,10 +238,37 @@ export default function Explore() {
 
   const filtered = DATA.places.filter(p => {
     const matchesSearch = p.title.toLowerCase().includes(search.toLowerCase()) || p.city.toLowerCase().includes(search.toLowerCase());
-    const matchesCat = category === "all" || p.category === category;
-    const matchesMood = mood === "all" || p.mood === mood;
+
+    const matchesCat = selectedCategories.includes("all") || selectedCategories.includes(p.category);
+    const matchesMood = selectedMoods.includes("all") || selectedMoods.includes(p.mood);
+
     return matchesSearch && matchesCat && matchesMood;
   });
+
+  const toggleCategory = (id) => {
+    setSelectedCategories(prev => {
+      if (id === "all") return ["all"];
+      const withoutAll = prev.filter(x => x !== "all");
+      if (withoutAll.includes(id)) {
+        const next = withoutAll.filter(x => x !== id);
+        return next.length === 0 ? ["all"] : next;
+      }
+      return [...withoutAll, id];
+    });
+  };
+
+  const toggleMood = (id) => {
+    setSelectedMoods(prev => {
+      if (id === "all") return ["all"];
+      const withoutAll = prev.filter(x => x !== "all");
+      if (withoutAll.includes(id)) {
+        const next = withoutAll.filter(x => x !== id);
+        return next.length === 0 ? ["all"] : next;
+      }
+      return [...withoutAll, id];
+    });
+  };
+
 
   const openReel = (id) => {
     setActiveReel(DATA.places.find(p => p.id === id));
@@ -271,9 +298,9 @@ export default function Explore() {
   return (
     <div style={{ fontFamily: "'Segoe UI', system-ui, sans-serif", background: "#f0eff0", minHeight: "100vh", color: "#1a1a1a" }}>
       {/* PAGE */}
-      <div style={{ display: "flex", gap: 32, padding: "16px 5% 32px", minHeight: "calc(100vh - 58px)", alignItems: "flex-start", maxWidth: "1800px", margin: "0 auto" }}>
+      <div className="flex flex-col lg:flex-row gap-8 px-4 sm:px-6 lg:px-[5%] py-4 lg:py-8 min-h-[calc(100vh-58px)] items-start max-w-[1800px] mx-auto">
         {/* SIDEBAR */}
-        <aside style={{ background: "#fff", borderRadius: 16, padding: "24px 20px", width: 240, flexShrink: 0, display: "flex", flexDirection: "column", gap: 20, height: "fit-content", position: "sticky", top: 16 }}>
+        <aside className="bg-white rounded-2xl p-6 w-full lg:w-[240px] flex-shrink-0 flex flex-col gap-5 h-fit lg:sticky lg:top-4">
           <div style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.5px", display: "flex", alignItems: "center", justifyContent: "space-between", color: "#0f172a" }}>
             EXPLORE
             <div style={{ width: 32, height: 32, borderRadius: 10, background: "#f8fafc", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", border: "1px solid #f1f5f9" }}>
@@ -283,33 +310,61 @@ export default function Explore() {
 
           <div>
             <div style={{ fontSize: 10, fontWeight: 900, color: "#94a3b8", letterSpacing: "1.5px", marginBottom: 14 }}>CATEGORY</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
-              {DATA.categories.map(c => (
-                <div key={c.id} onClick={() => setCategory(c.id)} style={railItemStyle(category === c.id)}>
-                  <Icon name={c.icon} size={16} color={category === c.id ? "#1a9be6" : "#888"} />
-                  <span style={{ fontWeight: category === c.id ? 700 : 500 }}>{c.label}</span>
-                </div>
-              ))}
+            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              {DATA.categories.map(c => {
+                const isActive = selectedCategories.includes(c.id);
+                return (
+                  <div key={c.id} onClick={() => toggleCategory(c.id)} style={railItemStyle(isActive)}>
+                    <div style={{
+                      width: 16, height: 16, borderRadius: 4,
+                      border: `1.5px solid ${isActive ? "#1a9be6" : "#cbd5e1"}`,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      background: isActive ? "#1a9be6" : "transparent"
+                    }}>
+                      {isActive && <Check size={10} color="#fff" strokeWidth={4} />}
+                    </div>
+                    <span style={{ fontWeight: isActive ? 700 : 500, fontSize: 13, color: isActive ? "#1a9be6" : "#64748b" }}>{c.label}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
           <div>
             <div style={{ fontSize: 10, fontWeight: 800, color: "#bbb", letterSpacing: "1px", marginBottom: 6 }}>MOOD</div>
-            <div style={{
-              display: "flex", flexDirection: "column", gap: 1
-            }}>
-              <div onClick={() => setMood("all")} style={railItemStyle(mood === "all")}>
-                <span style={{ fontWeight: mood === "all" ? 700 : 500 }}>All Moods</span>
-              </div>
-              {DATA.moods.map(m => (
-                <div key={m.id} onClick={() => setMood(m.id)} style={railItemStyle(mood === m.id)}>
-                  <span style={{ fontWeight: mood === m.id ? 700 : 500 }}>{m.label}</span>
+            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <div onClick={() => toggleMood("all")} style={railItemStyle(selectedMoods.includes("all"))}>
+                <div style={{
+                  width: 16, height: 16, borderRadius: 4,
+                  border: `1.5px solid ${selectedMoods.includes("all") ? "#1a9be6" : "#cbd5e1"}`,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  background: selectedMoods.includes("all") ? "#1a9be6" : "transparent"
+                }}>
+                  {selectedMoods.includes("all") && <Check size={10} color="#fff" strokeWidth={4} />}
                 </div>
-              ))}
+                <span style={{ fontWeight: selectedMoods.includes("all") ? 700 : 500, fontSize: 13, color: selectedMoods.includes("all") ? "#1a9be6" : "#64748b" }}>All Moods</span>
+              </div>
+              {DATA.moods.map(m => {
+                const isActive = selectedMoods.includes(m.id);
+                return (
+                  <div key={m.id} onClick={() => toggleMood(m.id)} style={railItemStyle(isActive)}>
+                    <div style={{
+                      width: 16, height: 16, borderRadius: 4,
+                      border: `1.5px solid ${isActive ? "#1a9be6" : "#cbd5e1"}`,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      background: isActive ? "#1a9be6" : "transparent"
+                    }}>
+                      {isActive && <Check size={10} color="#fff" strokeWidth={4} />}
+                    </div>
+                    <span style={{ fontWeight: isActive ? 700 : 500, fontSize: 13, color: isActive ? "#1a9be6" : "#64748b" }}>{m.label}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
-          <div style={{ marginTop: 5, display: "flex", flexDirection: "column", gap: 8 }}>
+
+          <div className="mt-5 grid grid-cols-3 lg:grid-cols-1 gap-2">
             <div onClick={() => setActiveTab("discovery")} style={tabStyle(activeTab === "discovery")}>
               <MapPin size={14} /> DISCOVERY
             </div>
@@ -323,40 +378,49 @@ export default function Explore() {
         </aside>
 
         {/* MAIN SECTION */}
-        <main style={{ flex: 1, minWidth: 0 }}>
+        <main style={{ flex: 1, minWidth: 0, height: "calc(100vh - 80px)" }}>
           {activeTab === "discovery" && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
-              <div style={{ background: "#fff", padding: "14px 24px", borderRadius: 20, display: "flex", alignItems: "center", gap: 14, boxShadow: "0 8px 30px rgba(0,0,0,0.04)", border: "1px solid #f1f5f9" }}>
-                <Icon name="search" size={20} color="#94a3b8" />
-                <input
-                  type="text"
-                  placeholder="Search romantic sunset spots, museum near Day 2..."
-                  style={{ border: "none", outline: "none", flex: 1, fontSize: 15, fontWeight: 600, color: "#1e293b", background: "transparent" }}
-                  value={search}
-                  onChange={e => setSearch(e.target.value)}
-                />
-                <button style={{ background: "#0f172a", color: "#fff", padding: "10px 24px", borderRadius: 14, fontSize: 13, fontWeight: 800, display: "flex", alignItems: "center", gap: 8, transition: "all 0.2s", boxShadow: "0 4px 12px rgba(15, 23, 42, 0.15)" }} className="hover:bg-slate-800 active:scale-95">
-                  <Filter size={16} /> Refine
-                </button>
-              </div>
+            <div className="bg-white/60 backdrop-blur-xl rounded-[40px] border border-white shadow-xl h-full flex flex-col overflow-hidden">
+              <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+                {/* FIXED SEARCH BAR */}
+                <div className="p-6 sm:p-8 pb-5 bg-white/40 border-b border-slate-100/50 z-50">
+                  <div className="bg-white p-3.5 px-6 rounded-2xl flex items-center gap-3.5 shadow-sm border border-slate-100">
+                    <Icon name="search" size={20} color="#94a3b8" />
+                    <input
+                      type="text"
+                      placeholder="Search romantic sunset spots, museum near Day 2..."
+                      className="border-none outline-none flex-1 text-sm sm:text-base font-semibold text-slate-700 bg-transparent"
+                      value={search}
+                      onChange={e => setSearch(e.target.value)}
+                    />
+                    <button className="hidden sm:flex bg-slate-900 text-white px-6 py-2.5 rounded-xl text-xs font-extrabold items-center gap-2 transition-all hover:bg-slate-800 active:scale-95 shadow-md shadow-slate-200">
+                      <Filter size={16} /> Refine
+                    </button>
+                  </div>
+                </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-                {filtered.map(place => (
-                  <PlaceCard
-                    key={place.id}
-                    place={place}
-                    liked={likedCards.has(place.id)}
-                    onLike={toggleLike}
-                    onOpen={openReel}
-                  />
-                ))}
+                {/* INTERNAL SCROLLABLE CONTENT */}
+                <div className="flex-1 overflow-y-auto no-scrollbar p-8 pt-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                    {filtered.map(place => (
+                      <PlaceCard
+                        key={place.id}
+                        place={place}
+                        liked={likedCards.has(place.id)}
+                        onLike={toggleLike}
+                        onOpen={openReel}
+                      />
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           )}
 
+
           {activeTab === "stories" && (
-            <div className="bg-white/80 backdrop-blur-xl rounded-[40px] overflow-hidden shadow-2xl border border-white/50">
-              <div className="max-h-[85vh] overflow-y-auto no-scrollbar">
+            <div className="bg-white/80 backdrop-blur-xl rounded-[40px] overflow-hidden shadow-2xl border border-white/50 h-full">
+              <div className="h-full overflow-y-auto no-scrollbar">
                 <ParallaxHero isEmbedded={true} />
                 <div className="px-8">
                   <MoodGrid />
@@ -373,11 +437,20 @@ export default function Explore() {
           )}
 
           {activeTab === "reels" && (
-            <div className="flex flex-col items-center justify-center py-20 px-8 text-center bg-white/60 backdrop-blur-xl rounded-[40px] border border-white shadow-xl min-h-[600px]">
+            <div className="relative flex flex-col items-center justify-center py-20 px-8 text-center bg-white/60 backdrop-blur-xl rounded-[40px] border border-white shadow-xl min-h-[600px]">
+              {/* Back Arrow */}
+              <button
+                onClick={() => setActiveTab("discovery")}
+                className="absolute top-8 left-8 p-3 bg-white border border-slate-100 text-slate-400 rounded-full shadow-sm hover:text-sky-500 hover:border-sky-100 transition-all active:scale-95"
+                title="Back to Discovery"
+              >
+                <ArrowLeft size={18} />
+              </button>
+
               <div className="w-24 h-24 bg-sky-50 rounded-full flex items-center justify-center mb-8 animate-pulse">
-                <Music size={40} className="text-sky-500" />
+                <Search size={40} className="text-sky-500" />
               </div>
-              <h2 className="text-4xl font-black text-slate-900 tracking-tight mb-4 uppercase italic">
+              <h2 className="text-4xl font-black text-slate-900 tracking-tight mb-4 uppercase">
                 Coming <span className="text-sky-600">Soon</span>
               </h2>
               <p className="max-w-md text-slate-500 font-medium leading-relaxed text-lg">
@@ -386,10 +459,11 @@ export default function Explore() {
                 and stunning posts from explorers globally.
               </p>
               <div className="mt-10 flex gap-3">
-                <div className="px-6 py-2 bg-slate-900 text-white rounded-full text-xs font-black tracking-widest uppercase shadow-lg"> Stay Tuned </div>
+                <div className="px-8 py-3 bg-slate-800 text-white rounded-full text-xs font-black tracking-widest uppercase shadow-lg"> Stay Tuned </div>
               </div>
             </div>
           )}
+
         </main>
       </div>
     </div>

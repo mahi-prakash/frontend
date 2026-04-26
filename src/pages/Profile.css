@@ -1,11 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+
 :root {
+
     --primary-blue: #1d72b8;
     --text-main: #111827;
     --text-muted: #6b7280;
     --text-light: #9ca3af;
     --bg-main: #fcfcfc;
     --bg-card: #ffffff;
-    --font-main: 'Inter', sans-serif;
+    --font-main: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    --font-heading: 'Outfit', sans-serif;
+
 
     /* Dynamic colors for icons/badges */
     --blue-light: #eff6ff;
@@ -57,11 +62,13 @@
 }
 
 .logo-bottom {
+    font-family: var(--font-heading);
     font-size: 1.5rem;
     font-weight: 800;
     display: flex;
     align-items: center;
 }
+
 
 .trav {
     color: var(--primary-blue);
@@ -246,11 +253,13 @@
 }
 
 .profile-name {
+    font-family: var(--font-heading);
     font-size: 2rem;
     font-weight: 800;
     margin: 0 0 0.25rem 0;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
+
 
 .profile-meta {
     font-size: 0.9rem;
@@ -334,13 +343,15 @@
 }
 
 .card-title {
+    font-family: var(--font-heading);
     font-size: 0.8rem;
     color: var(--text-light);
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     font-weight: 700;
     margin-bottom: 1.5rem;
     margin-top: 0;
 }
+
 
 .mt-auto {
     margin-top: auto;
@@ -523,11 +534,13 @@
 }
 
 .section-title {
+    font-family: var(--font-heading);
     font-size: 1.25rem;
     font-weight: 800;
     margin: 0;
     color: var(--text-main);
 }
+
 
 .btn-link {
     background: none;

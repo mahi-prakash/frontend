@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from "framer-motion";
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { Plane, Bookmark, Award, Globe, Pen, Camera, Globe2, MapPin, Calendar, ClipboardList, Plus, Heart, Settings, ShieldCheck, ChevronRight, BookOpen, Sun, Utensils, Compass, Send } from "lucide-react";
 import { useUser } from "../context/UserContext";
+import { GOOGLE_MAPS_API_KEY } from "../utils/googleMaps";
+import Planner from './Planner';
+
 
 const LIBRARIES = ['places'];
 
@@ -34,11 +37,26 @@ const ProfileDashboard = ({ user }) => {
   const [savedJournal, setSavedJournal] = useState(null);
 
   // Google Maps API Loader
-  const { isLoaded } = useJsApiLoader({
+  const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
     libraries: LIBRARIES
   });
+
+  const [mapAuthFailed, setMapAuthFailed] = useState(false);
+
+  useEffect(() => {
+    // 🛡️ Catch Google Maps Auth Failures (e.g. invalid API key)
+    window.gm_authFailure = () => {
+      console.error("❌ [Google Maps] Authentication Failure");
+      setMapAuthFailed(true);
+    };
+  }, []);
+
+  if (loadError) {
+    console.error("❌ [Google Maps] Load Error:", loadError);
+  }
+
 
   const toggleBucketList = (id) => {
     setBucketList(bucketList.map(item =>
@@ -967,7 +985,7 @@ const ProfileDashboard = ({ user }) => {
                 {/* Row 1, Col 2 to 3 */}
                 <section className="card upcoming-trip-card flex-col-card">
                   <div className="card-header-flex">
-                    <h2 className="section-title">Upcoming Journey</h2>
+                    <h3 className="section-title">Upcoming Journey</h3>
                     <button className="btn-link">View Itinerary <i className="fa-solid fa-arrow-right ml-1"></i></button>
                   </div>
                   {user.upcomingTrips.map(trip => (
@@ -984,7 +1002,7 @@ const ProfileDashboard = ({ user }) => {
                           <span className="trip-countdown"><i className="fa-regular fa-clock"></i> In {trip.daysUntil} Days</span>
                         </div>
                         <h3>{trip.destination}</h3>
-                        <p><i className="fa-regular fa-calendar text-blue-light"></i> {trip.date}</p>
+                        <p><i className="fa-regular fa-calendar text-sky-700"></i> {trip.date}</p>
                       </div>
                     </div>
                   ))}
@@ -999,31 +1017,39 @@ const ProfileDashboard = ({ user }) => {
                       <i className="fa-solid fa-map-location-dot text-blue icon-large"></i>
                     </div>
 
-                    <div className="map-placeholder" style={{ padding: 0, border: 'none', flexGrow: 1 }}>
-                      {isLoaded ? (
-                        <GoogleMap
-                          mapContainerStyle={mapContainerStyle}
-                          center={defaultCenter}
-                          zoom={1}
-                          options={{
-                            disableDefaultUI: true,
-                            styles: [
-                              { elementType: "geometry", stylers: [{ color: "#f5f5f5" }] },
-                              { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
-                              { elementType: "labels.text.fill", stylers: [{ color: "#616161" }] },
-                              { elementType: "labels.text.stroke", stylers: [{ color: "#f5f5f5" }] },
-                              { featureType: "water", elementType: "geometry", stylers: [{ color: "#e0f2fe" }] }
-                            ]
-                          }}
-                        >
-                          {user.visitedPins && user.visitedPins.map(pin => (
-                            <Marker
-                              key={pin.id}
-                              position={{ lat: pin.lat, lng: pin.lng }}
-                              title={pin.name}
-                            />
-                          ))}
-                        </GoogleMap>
+                    <div className="map-placeholder" style={{ padding: 0, border: 'none', flexGrow: 1, position: 'relative' }}>
+                    {isLoaded && !mapAuthFailed ? (
+                      <GoogleMap
+                        mapContainerStyle={{ width: '100%', height: '100%' }}
+                        center={user.visitedPins && user.visitedPins.length > 0 ? { lat: user.visitedPins[0].lat, lng: user.visitedPins[0].lng } : { lat: 20.5937, lng: 78.9629 }}
+                        zoom={4}
+                        options={{
+                          disableDefaultUI: true,
+                          styles: [
+                            { elementType: "geometry", stylers: [{ color: "#f8fafc" }] },
+                            { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
+                            { elementType: "labels.text.fill", stylers: [{ color: "#616161" }] },
+                            { elementType: "labels.text.stroke", stylers: [{ color: "#f5f5f5" }] },
+                            { featureType: "water", elementType: "geometry", stylers: [{ color: "#e0f2fe" }] }
+                          ]
+                        }}
+                      >
+                        {user.visitedPins && user.visitedPins.map(pin => (
+                          <Marker
+                            key={pin.id}
+                            position={{ lat: pin.lat, lng: pin.lng }}
+                            title={pin.name}
+                          />
+                        ))}
+                      </GoogleMap>
+                    ) : (loadError || mapAuthFailed) ? (
+                        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', backgroundColor: '#f1f5f9', overflow: 'hidden', borderRadius: '20px' }}>
+                          <img
+                            src="https://images.unsplash.com/photo-1524661135-423995f22d0b?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            alt="Map Error"
+                            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                          />
+                        </div>
                       ) : (
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', width: '100%', color: '#9ca3af' }}>
                           <i className="fa-solid fa-spinner fa-spin mr-2"></i> Loading Maps API...
@@ -1178,7 +1204,7 @@ const ProfileWrapper = () => {
     avatarImage: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=300&auto=format&fit=crop",
     profileName: user?.name || "Guest Explorer",
     location: "Global Nomad",
-    joinedDate: "Joined April 2024",
+    joinedDate: "Joined April 2026",
     email: user?.email || "guest@example.com",
     vibe: user?.personalityTag || "Modern Nomad",
     stats: {

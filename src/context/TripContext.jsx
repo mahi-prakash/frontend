@@ -11,14 +11,14 @@ export const TripProvider = ({ children }) => {
     const saved = sessionStorage.getItem("trips");
     return saved ? JSON.parse(saved) : [];
   });
-  
+
   const [activeTripId, setActiveTripId] = useState(() => {
     return sessionStorage.getItem("activeTripId") || null;
   });
 
   const [loading, setLoading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
-  
+
   // 🗺️ PERSISTENT ITINERARY CACHE
   const [itineraryCache, setItineraryCache] = useState(() => {
     const saved = sessionStorage.getItem("itineraryCache");
@@ -44,9 +44,9 @@ export const TripProvider = ({ children }) => {
 
   const enhanceItineraryWithImages = async (itineraryData) => {
     if (!itineraryData?.days) return itineraryData;
-    
+
     const dayEntries = Array.isArray(itineraryData.days)
-      ? itineraryData.days.map((d, i) => [`day-${i+1}`, d])
+      ? itineraryData.days.map((d, i) => [`day-${i + 1}`, d])
       : Object.entries(itineraryData.days);
 
     const enhancedDaysArray = await Promise.all(
@@ -70,7 +70,7 @@ export const TripProvider = ({ children }) => {
     if (!Array.isArray(itineraryData.days)) {
       return { ...itineraryData, days: Object.fromEntries(enhancedDaysArray) };
     }
-    
+
     return { ...itineraryData, days: enhancedDaysArray.map(pair => pair[1]) };
   };
 
@@ -90,7 +90,7 @@ export const TripProvider = ({ children }) => {
     setItineraryCache(prev => {
       const itinerary = prev[tripId] || { days: {} };
       const newItinerary = JSON.parse(JSON.stringify(itinerary));
-      
+
       if (!newItinerary.days) newItinerary.days = {};
       if (!newItinerary.days[dayId]) {
         newItinerary.days[dayId] = {
@@ -104,7 +104,7 @@ export const TripProvider = ({ children }) => {
       const newItem = {
         ...item,
         id: `item-${Date.now()}`,
-        time: item.time || "TBD"
+        time: item.time
       };
 
       newItinerary.days[dayId].activities = [...activities, newItem];
@@ -152,7 +152,7 @@ export const TripProvider = ({ children }) => {
         loading,
         createTrip,
         setActiveTrip,
-        fetchTrips: () => {}, // No-op in MVP
+        fetchTrips: () => { }, // No-op in MVP
         itineraryCache,
         saveItineraryToCache,
         addItemToTrip,
@@ -170,4 +170,4 @@ export const TripProvider = ({ children }) => {
   );
 };
 
-export const useTrip = () => useContext(TripContext);
+export const useTrip = () => useContext(TripContext);

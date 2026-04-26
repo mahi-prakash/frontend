@@ -3,7 +3,6 @@ import { motion as Motion, useMotionValue, useTransform } from "framer-motion";
 
 const TransitionOverlay = ({ onFinished }) => {
   const progress = useMotionValue(0);
-  console.log("🔥 TransitionOverlay MOUNTED");
 
   useEffect(() => {
     const timer = setTimeout(() => {

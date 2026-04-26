@@ -23,7 +23,6 @@ export const UserProvider = ({ children }) => {
         login: async () => ({ user: { id: "mvp-user" }, token: "mvp-token" }),
         signup: async () => ({ user: { id: "mvp-user" }, token: "mvp-token" }),
         logout: () => {
-          console.log("Logout called (MVP mode)");
         },
         refreshUser: () => {},
         loginWithGoogle: async () => ({ user: { id: "mvp-user" }, token: "mvp-token" }),

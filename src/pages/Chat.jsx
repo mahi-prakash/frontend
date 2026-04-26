@@ -20,6 +20,8 @@ import { api } from "../services/api";
 import Dropdown from "../components/common/Dropdown";
 import { useJsApiLoader } from "@react-google-maps/api";
 import { fetchPhoto } from "../utils/unsplash";
+import { GOOGLE_MAPS_API_KEY } from "../utils/googleMaps";
+
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -86,9 +88,10 @@ export default function Chat() {
   // ── Google Maps Initialization ───────────────────────────────────────────
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
     libraries: ['places']
   });
+
 
   // ── Onboarding modal ───────────────────────────────────────────────────────
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -180,11 +183,9 @@ export default function Chat() {
   // ── Fetch messages for a trip ──────────────────────────────────────────────
   const fetchMessages = async (tripId) => {
     if (!token || !tripId) return;
-    console.log("📡 Fetching messages for:", tripId);
 
     try {
       // In MVP, we don't fetch messages from backend, they are in localStorage
-      console.log("📝 Loading messages from local state for:", tripId);
 
       const current = tripData[tripId];
       if (current?.messages) {
@@ -229,7 +230,6 @@ export default function Chat() {
 
       // 🔥 LOADING GUARD: Wait for trips to be available before deciding to recover
       if (loading && (!realTrips || realTrips.length === 0)) {
-        console.log("⏳ Waiting for trips to load before checking recovery...");
         return;
       }
 
@@ -239,10 +239,8 @@ export default function Chat() {
         (Array.isArray(tripInList.itinerary.days) ? tripInList.itinerary.days.length > 0 : Object.keys(tripInList.itinerary.days).length > 0);
 
       if (hasDbItinerary) {
-        console.log("✅ Using Itinerary from DB Column (skipping history recovery)");
         recoveredItinerary = tripInList.itinerary;
       } else if (recoveredItinerary) {
-        console.log("🖼️ Enhancing recovered itinerary images...");
         try {
           recoveredItinerary = await enhanceItineraryWithImages(recoveredItinerary);
         } catch (e) { console.error("Recovery Image Enhancement failed", e); }
@@ -375,7 +373,7 @@ export default function Chat() {
           id: Date.now() + 1,
           from: "bot",
           text: `Hey ${userName}! Where do you wanna go? 🌍`,
-          options: ["Surprise me ✨", "Beach 🏖️", "Mountains ⛰️", "City 🏙️"],
+          options: ["Beach 🏖️", "Mountains ⛰️", "City 🏙️"],
         };
 
         setMessages(tripId, (prev) => [...prev, botMessage]);
@@ -408,7 +406,7 @@ export default function Chat() {
 
       botReply = {
         text: `Nice choice, ${userName}! ${destination} is amazing. 🌍 How many days are you planning to stay?`,
-        options: ["3", "5", "7", "Surprise me ✨"],
+        options: ["3", "5", "7", "10"],
       };
     } else if (currentStage === "ASK_DAYS" && !collected.days) {
       let days = text;
@@ -424,7 +422,7 @@ export default function Chat() {
 
       botReply = {
         text: "And what's the budget looking like? 💸",
-        options: ["Budget 💸", "Moderate 💳", "Luxury 💎", "Surprise me ✨"],
+        options: ["Budget 💸", "Moderate 💳", "Luxury 💎"],
       };
     } else if (currentStage === "ASK_BUDGET" && !collected.budget) {
       let budget = text;
@@ -564,7 +562,7 @@ export default function Chat() {
         {
           id: Date.now() + 3,
           from: "bot",
-          text: `Error: ${err.message}. Please check if the backend is running and the database is connected.`,
+          text: "I'm having trouble connecting to the travel engine. Please try again in a few seconds.",
         },
       ]);
     } finally {
@@ -633,15 +631,15 @@ export default function Chat() {
       if (!collected.destination) {
         aiStage = "ASK_DESTINATION";
         firstQuestion = `Hey ${userName}! I've set up your trip. First things first—where are we headed? 🌍`;
-        options = ["Surprise me ✨", "Beach 🏖️", "Mountains ⛰️", "City 🏙️"];
+        options = ["Beach 🏖️", "Mountains ⛰️", "City 🏙️"];
       } else if (!collected.days) {
         aiStage = "ASK_DAYS";
         firstQuestion = `Love it, ${destination} is amazing! 🌍 How many days should I plan for?`;
-        options = ["3", "5", "7", "Surprise me ✨"];
+        options = ["3", "5", "7", "10"];
       } else if (!collected.budget) {
         aiStage = "ASK_BUDGET";
         firstQuestion = `Got it! And what's the budget looking like for ${destination}? 💸`;
-        options = ["Budget 💸", "Moderate 💳", "Luxury 💎", "Surprise me ✨"];
+        options = ["Budget 💸", "Moderate 💳", "Luxury 💎"];
       } else {
         // Everything finalized in Modal
         aiStage = "GENERATING";
@@ -767,6 +765,14 @@ export default function Chat() {
                   animate={{ width: `${((onboardingStep - 1) / 3) * 100}%` }}
                 />
               </div>
+              {onboardingStep > 2 && (
+                <button
+                  onClick={() => setOnboardingStep(onboardingStep - 1)}
+                  className="absolute top-4 left-4 p-2 rounded-full hover:bg-slate-50 transition text-slate-400 hover:text-slate-600"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+              )}
 
               <button
                 onClick={() => setShowOnboarding(false)}
@@ -812,10 +818,9 @@ export default function Chat() {
 
                       <div className="flex flex-wrap gap-2 justify-center">
                         {[
-                          { label: "Surprise me ✨", val: "Surprise me" },
-                          { label: "Not decided 🤔", val: "Not decided" },
                           { label: "Beach 🏖️", val: "Beach" },
-                          { label: "Mountains ⛰️", val: "Mountains" }
+                          { label: "Mountains ⛰️", val: "Mountains" },
+                          { label: "City 🏙️", val: "City" }
                         ].map((chip) => (
                           <button
                             key={chip.val}
@@ -829,16 +834,10 @@ export default function Chat() {
                           </button>
                         ))}
                       </div>
-                      <div className="flex gap-3">
+                      <div className="pt-1">
                         <button
                           onClick={() => setOnboardingStep(3)}
-                          className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-base hover:bg-slate-200 transition"
-                        >
-                          Skip
-                        </button>
-                        <button
-                          onClick={() => setOnboardingStep(3)}
-                          className="flex-[2] py-3 bg-sky-600 text-white rounded-xl font-bold text-base hover:bg-sky-700 transition disabled:opacity-50"
+                          className="w-full py-3 bg-sky-600 text-white rounded-xl font-bold text-base hover:bg-sky-700 transition disabled:opacity-50"
                           disabled={!onboardingData.destination}
                         >
                           Next
@@ -872,10 +871,10 @@ export default function Chat() {
                             onClick={() =>
                               setOnboardingData({ ...onboardingData, days: d })
                             }
-                            className={`p-3.5 rounded-xl border-2 transition font-bold text-[10px] ${onboardingData.days === d ? "border-sky-600 bg-sky-50 text-sky-600" : "border-slate-100 hover:border-slate-200 text-slate-600"}`}
+                            className={`p-1.5 rounded-xl border-2 transition font-bold text-[10px] ${onboardingData.days === d ? "border-sky-600 bg-sky-50 text-sky-600" : "border-slate-100 hover:border-slate-200 text-slate-600"}`}
                           >
-                            {d === "Surprise me" ? "✨" : d}
-                            <div className="text-[8px] mt-0.5">{d === "Surprise me" ? "Surprise" : "Days"}</div>
+                            {d === "Surprise me" ? "" : d}
+                            <div className="text-[10px] mt-0.5">{d === "Surprise me" ? "Surprise" : "Days"}</div>
                           </button>
                         ))}
                       </div>
@@ -890,16 +889,10 @@ export default function Chat() {
                         placeholder="Or type custom days"
                         className="w-full px-5 py-3 bg-slate-100/50 border-2 border-transparent focus:border-sky-600 rounded-xl outline-none text-sm transition"
                       />
-                      <div className="flex gap-3">
+                      <div className="pt-1">
                         <button
                           onClick={() => setOnboardingStep(4)}
-                          className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-base hover:bg-slate-200 transition"
-                        >
-                          Skip
-                        </button>
-                        <button
-                          onClick={() => setOnboardingStep(4)}
-                          className="flex-[2] py-3 bg-sky-600 text-white rounded-xl font-bold text-base hover:bg-sky-700 transition"
+                          className="w-full py-3 bg-sky-600 text-white rounded-xl font-bold text-base hover:bg-sky-700 transition"
                         >
                           Next
                         </button>
@@ -944,8 +937,8 @@ export default function Chat() {
                                 }
                                 className={`p-2.5 rounded-xl border-2 transition font-bold text-[10px] ${onboardingData.budget === b ? "border-sky-600 bg-sky-50 text-sky-600" : "border-slate-100 hover:border-slate-200 text-slate-600"}`}
                               >
-                                {b === "Surprise me" ? "✨" : b}
-                                <div className="text-[8px] mt-0.5">{b === "Surprise me" ? "Surprise" : ""}</div>
+                                {b}
+
                               </button>
                             ),
                           )}
@@ -986,7 +979,7 @@ export default function Chat() {
                           Vibe
                         </p>
                         <div className="grid grid-cols-5 gap-2">
-                          {["Chaotic", "Chill", "Adventure", "Balanced", "Not decided"].map(
+                          {["Relaxing", "Adventure", "Balanced", "Spiritual", "Not decided"].map(
                             (v) => (
                               <button
                                 key={v}
@@ -1005,16 +998,10 @@ export default function Chat() {
                         </div>
                       </div>
 
-                      <div className="flex gap-3 pt-1">
-                        <button
-                          onClick={() => completeOnboarding(true)}
-                          className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-base hover:bg-slate-200 transition"
-                        >
-                          Skip & Chat
-                        </button>
+                      <div className="pt-1">
                         <button
                           onClick={() => completeOnboarding(false)}
-                          className="flex-[2] py-3 bg-sky-600 text-white rounded-xl font-bold text-base hover:bg-sky-700 transition"
+                          className="w-full py-3 bg-sky-600 text-white rounded-xl font-bold text-base hover:bg-sky-700 transition"
                         >
                           Build Itinerary 🚀
                         </button>
@@ -1023,16 +1010,6 @@ export default function Chat() {
                   )}
                 </AnimatePresence>
 
-                {/* Global skip */}
-                <div className="mt-6 pt-5 border-t border-slate-50">
-                  <button
-                    onClick={() => completeOnboarding(true)}
-                    className="text-slate-400 hover:text-slate-600 text-sm font-semibold transition flex items-center justify-center gap-1.5 mx-auto px-4 py-2 hover:bg-slate-50 rounded-xl"
-                  >
-                    Skip all and start chatting
-                    <ChevronRight size={14} />
-                  </button>
-                </div>
               </div>
             </motion.div>
           </div>
@@ -1041,14 +1018,13 @@ export default function Chat() {
 
       <header className="h-8 flex items-center" />
 
-      <main className="flex-1 w-full px-20">
+      <main className="flex-1 w-full px-4 sm:px-10 lg:px-20 pb-8 lg:pb-0">
         <div
-          className="h-full grid gap-8"
-          style={{ gridTemplateColumns: "64% 36%" }}
+          className="h-full grid grid-cols-1 lg:grid-cols-[64%_36%] gap-8"
         >
           {/* ══════════ CHAT PANEL ══════════ */}
-          <section className="relative z-20">
-            <div className="h-[570px] rounded-[32px] bg-white shadow-2xl border border-slate-100 flex flex-col overflow-visible relative">
+          <section className="relative z-20 h-fit lg:h-full">
+            <div className="h-[500px] lg:h-[570px] rounded-[32px] bg-white shadow-2xl border border-slate-100 flex flex-col overflow-visible relative">
               {/* Header */}
               <div className="px-8 py-6 flex items-center justify-between relative z-30">
                 <div className="flex items-center gap-3">
@@ -1093,11 +1069,11 @@ export default function Chat() {
                 <div className="flex items-center gap-2">
                   {/* Trip selector */}
                   {/* Current Trip Display */}
-                  <div className="flex items-center gap-2 px-5 py-2 rounded-full bg-white border border-slate-200 text-slate-800 text-sm font-semibold shadow-sm shadow-slate-100">
+                  <div className="hidden sm:flex items-center gap-2 px-5 py-2 rounded-full bg-white border border-slate-200 text-slate-800 text-sm font-semibold shadow-sm shadow-slate-100">
                     <span className="text-slate-400 font-medium mr-1">
                       Planning:
                     </span>
-                    <span className="truncate max-w-[120px]">
+                    <span className="truncate max-w-[80px] sm:max-w-[120px]">
                       {tripMeta?.title || tripMeta?.name || "New Trip"}
                     </span>
                   </div>
@@ -1105,7 +1081,7 @@ export default function Chat() {
                   {/* New trip */}
                   <button
                     onClick={handleNewChat}
-                    className="text-sm font-semibold border border-sky-600 text-white bg-sky-600 hover:bg-sky-700 px-4 py-1.5 rounded-full transition shadow-md shadow-sky-100"
+                    className="text-xs sm:text-sm font-semibold border border-sky-600 text-white bg-sky-600 hover:bg-sky-700 px-3 sm:px-4 py-1.5 rounded-full transition shadow-md shadow-sky-100 whitespace-nowrap"
                   >
                     + New Trip
                   </button>
@@ -1189,16 +1165,16 @@ export default function Chat() {
           </section>
 
           {/* ══════════ RIGHT PANEL ══════════ */}
-          <aside>
-            <div className="h-[570px] rounded-[32px] bg-white shadow-2xl border border-slate-100 flex flex-col relative">
+          <aside className="h-fit lg:h-full">
+            <div className="h-[500px] lg:h-[570px] rounded-[32px] bg-white shadow-2xl border border-slate-100 flex flex-col relative">
               {/* Tabs */}
-              <div className="px-11 pt-6 flex justify-between">
-                <div className="flex gap-2 text-s font-semibold">
+              <div className="px-4 sm:px-11 pt-6 flex justify-between overflow-x-auto no-scrollbar">
+                <div className="flex gap-2 text-xs sm:text-s font-semibold whitespace-nowrap">
                   {["itinerary", "places", "nearby"].map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}
-                      className={`px-5.5 py-1.5 rounded-full border transition-all duration-200 ${activeTab === tab
+                      className={`px-3 sm:px-5.5 py-1.5 rounded-full border transition-all duration-200 ${activeTab === tab
                         ? "bg-slate-900 text-white border-slate-800"
                         : "bg-white text-slate-600 border-sky-200 hover:bg-sky-100 hover:border-sky-400"
                         }`}
@@ -1241,7 +1217,7 @@ export default function Chat() {
                     </div>
 
                     {/* Itinerary cards */}
-                    <div className="rounded-3xl bg-white shadow-2xl px-6 py-2 space-y-4 max-h-[48vh] overflow-y-auto no-scrollbar mb-4">
+                    <div className="rounded-3xl bg-white shadow-2xl px-6 py-6 space-y-4 max-h-[48vh] overflow-y-auto no-scrollbar mb-4">
                       {!activeItinerary ? (
                         <div className="flex flex-col items-center justify-center py-12 text-center">
                           <Sparkles className="text-sky-300 w-8 h-8 mb-3" />
@@ -1269,9 +1245,9 @@ export default function Chat() {
                               <div className="flex items-center gap-3 mb-4">
                                 <div className="h-px flex-1 bg-slate-100" />
                                 <div className="bg-slate-50 border border-slate-100 px-4 py-1.5 rounded-full flex items-center gap-2">
-
-                                  <span className="text-[11px] font-bold text-sky-600">
-                                    {day.date}
+                                  {/*add the day 1 or 2 thing here...*/}
+                                  <span className="text-[13px] font-bold text-sky-600">
+                                    {"Day " + day.day}
                                   </span>
 
                                 </div>
@@ -1326,7 +1302,7 @@ export default function Chat() {
                                         className="relative flex items-center gap-4 w-full rounded-2xl bg-white px-6 py-3 shadow-xl border border-slate-100 hover:shadow-2xl transition-all"
                                       >
                                         <div className="flex-1">
-                                          <div className="flex items-center gap-2 text-[10px] text-sky-600 font-bold uppercase tracking-wide">
+                                          <div className="flex items-center gap-2 text-[13px] text-sky-600 font-bold uppercase tracking-wide">
                                             <Icon size={12} /> {activity.time} •{" "}
                                             {activity.type}
                                           </div>
@@ -1362,7 +1338,7 @@ export default function Chat() {
                       whileTap={{ scale: 0.98 }}
                       onClick={() => navigate("/bookings")}
                       disabled={!activeItinerary}
-                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-sky-600 to-sky-500 text-white font-bold text-sm shadow-xl shadow-sky-100 flex items-center justify-center gap-3 hover:shadow-2xl hover:shadow-sky-300 transition-all duration-300 disabled:opacity-40"
+                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-sky-700 to-sky-500 text-white font-bold text-sm shadow-xl shadow-sky-100 flex items-center justify-center gap-3 hover:shadow-2xl hover:shadow-sky-300 transition-all duration-300 disabled:opacity-40"
                     >
                       <Sparkles size={18} />
                       Finalize & Show Bookings

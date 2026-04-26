@@ -10,7 +10,6 @@ const DEBUG = true;
 const logApi = (name, type, data) => {
     if (DEBUG) {
         const timestamp = new Date().toLocaleTimeString();
-        console.log(`%c[API ${timestamp}] ${name} (${type})`, 'color: #0081C9; font-weight: bold;', data || '');
     }
 };
 
