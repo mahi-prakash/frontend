@@ -827,15 +827,9 @@ export default function Chat() {
                         ))}
                       </div>
                       <div className="flex gap-3">
-                        <button
+                         <button
                           onClick={() => setOnboardingStep(3)}
-                          className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-base hover:bg-slate-200 transition"
-                        >
-                          Skip
-                        </button>
-                        <button
-                          onClick={() => setOnboardingStep(3)}
-                          className="flex-[2] py-3 bg-sky-600 text-white rounded-xl font-bold text-base hover:bg-sky-700 transition disabled:opacity-50"
+                          className="w-full py-3 bg-sky-600 text-white rounded-xl font-bold text-base hover:bg-sky-700 transition disabled:opacity-50"
                           disabled={!onboardingData.destination}
                         >
                           Next
@@ -889,10 +883,10 @@ export default function Chat() {
                       />
                       <div className="flex gap-3">
                         <button
-                          onClick={() => setOnboardingStep(4)}
+                          onClick={() => setOnboardingStep(2)}
                           className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-base hover:bg-slate-200 transition"
                         >
-                          Skip
+                          Back
                         </button>
                         <button
                           onClick={() => setOnboardingStep(4)}
@@ -1004,10 +998,10 @@ export default function Chat() {
 
                       <div className="flex gap-3 pt-1">
                         <button
-                          onClick={() => completeOnboarding(true)}
+                          onClick={() => setOnboardingStep(3)}
                           className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-base hover:bg-slate-200 transition"
                         >
-                          Skip & Chat
+                          Back
                         </button>
                         <button
                           onClick={() => completeOnboarding(false)}
@@ -1020,16 +1014,6 @@ export default function Chat() {
                   )}
                 </AnimatePresence>
 
-                {/* Global skip */}
-                <div className="mt-6 pt-5 border-t border-slate-50">
-                  <button
-                    onClick={() => completeOnboarding(true)}
-                    className="text-slate-400 hover:text-slate-600 text-sm font-semibold transition flex items-center justify-center gap-1.5 mx-auto px-4 py-2 hover:bg-slate-50 rounded-xl"
-                  >
-                    Skip all and start chatting
-                    <ChevronRight size={14} />
-                  </button>
-                </div>
               </div>
             </motion.div>
           </div>
