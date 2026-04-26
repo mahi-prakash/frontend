@@ -163,8 +163,6 @@ const UnsplashImage = ({ query, alt, style }) => {
 const CardScene = ({ gradient, height = 150, query, title }) => (
   <div style={{ background: gradient, width: "100%", height, position: "relative", overflow: "hidden" }}>
     <UnsplashImage query={query || title} alt={title} style={{ width: "100%", height: "100%", objectFit: "cover", position: "absolute", inset: 0, zIndex: 1 }} />
-    <div style={{ position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)", width: 16, height: "100%", background: "#252525", zIndex: 2 }} />
-    <div style={{ position: "absolute", bottom: "14%", left: "50%", transform: "translateX(-50%)", width: 2, height: "26%", background: "#e8c830", zIndex: 3 }} />
   </div>
 );
 
