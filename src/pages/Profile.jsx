@@ -1,33 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from "framer-motion";
-<<<<<<< HEAD
 import { Plane, Bookmark, Award, Globe, Pen, Camera, Globe2, MapPin, Calendar, ClipboardList, Plus, Heart, Settings, ShieldCheck, ChevronRight, BookOpen, Sun, Utensils, Compass, Send } from "lucide-react";
 import { useUser } from "../context/UserContext";
 import Planner from './Planner';
-
-
-
-=======
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
-import { Plane, Bookmark, Award, Globe, Pen, Camera, Globe2, MapPin, Calendar, ClipboardList, Plus, Heart, Settings, ShieldCheck, ChevronRight, BookOpen, Sun, Utensils, Compass, Send } from "lucide-react";
-import { useUser } from "../context/UserContext";
-import { GOOGLE_MAPS_API_KEY } from "../utils/googleMaps";
-import Planner from './Planner';
-
-
-const LIBRARIES = ['places'];
-
-const mapContainerStyle = {
-  width: '100%',
-  height: '100%',
-  borderRadius: '20px'
-};
-
-const defaultCenter = {
-  lat: 20,
-  lng: 0
-};
->>>>>>> 6dcec0b131a447ac451c99102ad1e6067755854c
 
 const ProfileDashboard = ({ user }) => {
   const [activeNav, setActiveNav] = useState('Profile');
@@ -45,30 +20,7 @@ const ProfileDashboard = ({ user }) => {
   const [journalEntry, setJournalEntry] = useState('');
   const [savedJournal, setSavedJournal] = useState(null);
 
-<<<<<<< HEAD
 
-=======
-  // Google Maps API Loader
-  const { isLoaded, loadError } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
-    libraries: LIBRARIES
-  });
-
-  const [mapAuthFailed, setMapAuthFailed] = useState(false);
-
-  useEffect(() => {
-    // 🛡️ Catch Google Maps Auth Failures (e.g. invalid API key)
-    window.gm_authFailure = () => {
-      console.error("❌ [Google Maps] Authentication Failure");
-      setMapAuthFailed(true);
-    };
-  }, []);
-
-  if (loadError) {
-    console.error("❌ [Google Maps] Load Error:", loadError);
-  }
->>>>>>> 6dcec0b131a447ac451c99102ad1e6067755854c
 
 
   const toggleBucketList = (id) => {
