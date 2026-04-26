@@ -1018,31 +1018,31 @@ const ProfileDashboard = ({ user }) => {
                     </div>
 
                     <div className="map-placeholder" style={{ padding: 0, border: 'none', flexGrow: 1, position: 'relative' }}>
-                    {isLoaded && !mapAuthFailed ? (
-                      <GoogleMap
-                        mapContainerStyle={{ width: '100%', height: '100%' }}
-                        center={user.visitedPins && user.visitedPins.length > 0 ? { lat: user.visitedPins[0].lat, lng: user.visitedPins[0].lng } : { lat: 20.5937, lng: 78.9629 }}
-                        zoom={4}
-                        options={{
-                          disableDefaultUI: true,
-                          styles: [
-                            { elementType: "geometry", stylers: [{ color: "#f8fafc" }] },
-                            { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
-                            { elementType: "labels.text.fill", stylers: [{ color: "#616161" }] },
-                            { elementType: "labels.text.stroke", stylers: [{ color: "#f5f5f5" }] },
-                            { featureType: "water", elementType: "geometry", stylers: [{ color: "#e0f2fe" }] }
-                          ]
-                        }}
-                      >
-                        {user.visitedPins && user.visitedPins.map(pin => (
-                          <Marker
-                            key={pin.id}
-                            position={{ lat: pin.lat, lng: pin.lng }}
-                            title={pin.name}
-                          />
-                        ))}
-                      </GoogleMap>
-                    ) : (loadError || mapAuthFailed) ? (
+                      {isLoaded && !mapAuthFailed ? (
+                        <GoogleMap
+                          mapContainerStyle={{ width: '100%', height: '100%' }}
+                          center={user.visitedPins && user.visitedPins.length > 0 ? { lat: user.visitedPins[0].lat, lng: user.visitedPins[0].lng } : { lat: 20.5937, lng: 78.9629 }}
+                          zoom={4}
+                          options={{
+                            disableDefaultUI: true,
+                            styles: [
+                              { elementType: "geometry", stylers: [{ color: "#f8fafc" }] },
+                              { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
+                              { elementType: "labels.text.fill", stylers: [{ color: "#616161" }] },
+                              { elementType: "labels.text.stroke", stylers: [{ color: "#f5f5f5" }] },
+                              { featureType: "water", elementType: "geometry", stylers: [{ color: "#e0f2fe" }] }
+                            ]
+                          }}
+                        >
+                          {user.visitedPins && user.visitedPins.map(pin => (
+                            <Marker
+                              key={pin.id}
+                              position={{ lat: pin.lat, lng: pin.lng }}
+                              title={pin.name}
+                            />
+                          ))}
+                        </GoogleMap>
+                      ) : (loadError || mapAuthFailed) ? (
                         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', backgroundColor: '#f1f5f9', overflow: 'hidden', borderRadius: '20px' }}>
                           <img
                             src="https://images.unsplash.com/photo-1524661135-423995f22d0b?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"

@@ -1558,7 +1558,7 @@ export default function Planner() {
                     ) : (loadError || mapAuthFailed) ? (
                       <div className="absolute inset-0 flex flex-col items-center justify-center text-center bg-slate-100 overflow-hidden rounded-[24px]">
                         <img
-                          src="https://images.unsplash.com/photo-1524661135-423995f22d0b?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                          src="https://external-preview.redd.it/google-maps-finally-added-regional-rail-to-the-transit-layer-v0-MZ-ySPYQOib7lHk2tEkyudX6f1BUCeYx42ETnX2nio4.png?width=1080&crop=smart&auto=webp&s=20ef66d68e89d4d3f1c6f17aee7ae472644503e5"
                           alt="Map Error"
                           className="absolute inset-0 w-full h-full object-cover"
                         />
