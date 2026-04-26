@@ -835,15 +835,10 @@ export default function Chat() {
                         ))}
                       </div>
                       <div className="flex gap-3">
+                      <div className="pt-1">
                         <button
                           onClick={() => setOnboardingStep(3)}
-                          className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-base hover:bg-slate-200 transition"
-                        >
-                          Skip
-                        </button>
-                        <button
-                          onClick={() => setOnboardingStep(3)}
-                          className="flex-[2] py-3 bg-sky-600 text-white rounded-xl font-bold text-base hover:bg-sky-700 transition disabled:opacity-50"
+                          className="w-full py-3 bg-sky-600 text-white rounded-xl font-bold text-base hover:bg-sky-700 transition disabled:opacity-50"
                           disabled={!onboardingData.destination}
                         >
                           Next
@@ -895,16 +890,10 @@ export default function Chat() {
                         placeholder="Or type custom days"
                         className="w-full px-5 py-3 bg-slate-100/50 border-2 border-transparent focus:border-sky-600 rounded-xl outline-none text-sm transition"
                       />
-                      <div className="flex gap-3">
+                      <div className="pt-1">
                         <button
                           onClick={() => setOnboardingStep(4)}
-                          className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-base hover:bg-slate-200 transition"
-                        >
-                          Skip
-                        </button>
-                        <button
-                          onClick={() => setOnboardingStep(4)}
-                          className="flex-[2] py-3 bg-sky-600 text-white rounded-xl font-bold text-base hover:bg-sky-700 transition"
+                          className="w-full py-3 bg-sky-600 text-white rounded-xl font-bold text-base hover:bg-sky-700 transition"
                         >
                           Next
                         </button>
@@ -1010,16 +999,10 @@ export default function Chat() {
                         </div>
                       </div>
 
-                      <div className="flex gap-3 pt-1">
-                        <button
-                          onClick={() => completeOnboarding(true)}
-                          className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-base hover:bg-slate-200 transition"
-                        >
-                          Skip & Chat
-                        </button>
+                      <div className="pt-1">
                         <button
                           onClick={() => completeOnboarding(false)}
-                          className="flex-[2] py-3 bg-sky-600 text-white rounded-xl font-bold text-base hover:bg-sky-700 transition"
+                          className="w-full py-3 bg-sky-600 text-white rounded-xl font-bold text-base hover:bg-sky-700 transition"
                         >
                           Build Itinerary 🚀
                         </button>
