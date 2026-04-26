@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet, useLocation, NavLink } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import { LogOut, ChevronDown, Menu, X } from "lucide-react";
@@ -12,6 +12,11 @@ const MainLayout = () => {
   const isFullWidthPage = location.pathname === "/chat" || location.pathname.startsWith("/planner") || location.pathname === "/profile" || location.pathname === "/bookings" || location.pathname === "/explore";
   const { user, logout } = useUser();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Automatically close the menu when the route changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
 
   const navItems = [
     { to: "/chat", label: "Chat" },
@@ -144,7 +149,11 @@ const MainLayout = () => {
                       <li key={item.to}>
                         <NavLink
                           to={item.to}
-                          onClick={() => setIsMenuOpen(false)}
+                          onClick={() => {
+                            // Adding a slight delay prevents the unmount animation 
+                            // from blocking the React Router link navigation
+                            setTimeout(() => setIsMenuOpen(false), 150);
+                          }}
                           className={({ isActive }) =>
                             `flex items-center gap-4 p-4 rounded-2xl text-base font-bold transition-all ${isActive
                               ? "bg-sky-50 text-sky-600 shadow-sm border border-sky-100"
@@ -160,7 +169,13 @@ const MainLayout = () => {
                 </nav>
 
                 <div className="mt-auto pt-6 border-t border-slate-100">
-                  <div className="flex items-center gap-3 p-2">
+                  <NavLink
+                    to="/profile"
+                    onClick={() => {
+                      setTimeout(() => setIsMenuOpen(false), 150);
+                    }}
+                    className="flex items-center gap-3 p-2 rounded-2xl hover:bg-slate-50 transition-colors"
+                  >
                     <div className="h-10 w-10 rounded-xl bg-slate-100 overflow-hidden ring-2 ring-white shadow-sm shrink-0">
                       <img
                         src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100&auto=format&fit=crop"
@@ -172,7 +187,7 @@ const MainLayout = () => {
                       <p className="text-sm font-bold text-slate-900 leading-tight">Guest Traveler</p>
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Signed in</p>
                     </div>
-                  </div>
+                  </NavLink>
                 </div>
               </motion.div>
             </>
