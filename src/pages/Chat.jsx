@@ -811,9 +811,14 @@ export default function Chat() {
                       <div className="flex flex-wrap gap-2 justify-center">
                         {[
                           { label: "Surprise me ✨", val: "Surprise me" },
-                          { label: "Not decided 🤔", val: "Not decided" },
                           { label: "Beach 🏖️", val: "Beach" },
-                          { label: "Mountains ⛰️", val: "Mountains" }
+                          { label: "Mountains ⛰️", val: "Mountains" },
+                          { label: "City 🏙️", val: "City" },
+                          { label: "Adventure 🧗", val: "Adventure" },
+                          { label: "Cultural 🏛️", val: "Cultural" },
+                          { label: "Nature 🌿", val: "Nature" },
+                          { label: "Party 🎉", val: "Party" },
+                          { label: "Budget 💸", val: "Budget" }
                         ].map((chip) => (
                           <button
                             key={chip.val}
