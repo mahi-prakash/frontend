@@ -1235,11 +1235,16 @@ export default function Planner() {
                                 {provided.placeholder}
 
                                 {(day.items?.length || 0) === 0 && (
-                                  <div className="flex flex-col items-center justify-center py-6 border-2 border-dashed border-slate-200/60 rounded-2xl bg-slate-50/50">
-                                    <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-300 mb-2">
-                                      <Plus size={16} />
+                                  <div 
+                                    onClick={() => navigate('/explore')}
+                                    className="cursor-pointer group flex flex-col items-center justify-center py-8 border-2 border-dashed border-slate-200/60 rounded-2xl bg-slate-50/50 hover:bg-sky-50 hover:border-sky-200 transition-all"
+                                  >
+                                    <div className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-slate-300 group-hover:text-sky-500 transition-colors mb-3">
+                                      <Search size={18} />
                                     </div>
-                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wide">Drag places here</p>
+                                    <p className="text-[10px] text-slate-400 font-extrabold uppercase tracking-widest group-hover:text-sky-600 transition-colors">
+                                      Go to explore to add places
+                                    </p>
                                   </div>
                                 )}
                               </div>

@@ -154,40 +154,62 @@ const Bookings = () => {
                                         </h2>
                                         <p className="text-slate-500 text-sm">Confirm and book your final itineraries</p>
                                     </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                        {availableTrips.map((trip) => (
-                                            <motion.div
-                                                key={trip.id}
-                                                whileHover={{ y: -8 }}
-                                                whileTap={{ scale: 0.98 }}
-                                                onClick={() => setSelectedTrip(trip)}
-                                                className="cursor-pointer group h-full"
-                                            >
-                                                <Card className="overflow-hidden border border-slate-200 hover:border-sky-200 hover:shadow-2xl transition-all duration-300 h-full flex flex-col">
-                                                    <div className="h-48 overflow-hidden relative">
-                                                        <img
-                                                            src={tripImages[trip.id] || trip.image || "https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=800&auto=format&fit=crop"}
-                                                            alt={trip.title}
-                                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                                        />
-                                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-80" />
-                                                        <div className="absolute bottom-4 left-4 text-white">
-                                                            <h3 className="font-bold text-lg mb-0.5">{trip.title}</h3>
-                                                            <div className="flex items-center gap-2 text-xs font-medium text-white/90">
-                                                                <Calendar className="w-3 h-3" />
-                                                                {trip.destination}
+                                    <div className="min-h-[300px] flex items-center justify-center">
+                                        {availableTrips.length > 0 ? (
+                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
+                                                {availableTrips.map((trip) => (
+                                                    <motion.div
+                                                        key={trip.id}
+                                                        whileHover={{ y: -8 }}
+                                                        whileTap={{ scale: 0.98 }}
+                                                        onClick={() => setSelectedTrip(trip)}
+                                                        className="cursor-pointer group h-full"
+                                                    >
+                                                        <Card className="overflow-hidden border border-slate-200 hover:border-sky-200 hover:shadow-2xl transition-all duration-300 h-full flex flex-col">
+                                                            <div className="h-48 overflow-hidden relative">
+                                                                <img
+                                                                    src={tripImages[trip.id] || trip.image || "https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=800&auto=format&fit=crop"}
+                                                                    alt={trip.title}
+                                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                                                />
+                                                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-80" />
+                                                                <div className="absolute bottom-4 left-4 text-white">
+                                                                    <h3 className="font-bold text-lg mb-0.5">{trip.title}</h3>
+                                                                    <div className="flex items-center gap-2 text-xs font-medium text-white/90">
+                                                                        <Calendar className="w-3 h-3" />
+                                                                        {trip.destination}
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="p-4 flex-1 bg-white">
-                                                        <div className="flex flex-wrap gap-2 text-xs font-medium text-slate-600">
-                                                            <span className="bg-slate-50 border border-slate-100 px-2 py-1 rounded-md">{trip.suggestions?.flights?.length || 0} Flights</span>
-                                                            <span className="bg-slate-50 border border-slate-100 px-2 py-1 rounded-md">{trip.suggestions?.hotels?.length || 0} Hotels</span>
-                                                        </div>
-                                                    </div>
-                                                </Card>
-                                            </motion.div>
-                                        ))}
+                                                            <div className="p-4 flex-1 bg-white">
+                                                                <div className="flex flex-wrap gap-2 text-xs font-medium text-slate-600">
+                                                                    <span className="bg-slate-50 border border-slate-100 px-2 py-1 rounded-md">{trip.suggestions?.flights?.length || 0} Flights</span>
+                                                                    <span className="bg-slate-50 border border-slate-100 px-2 py-1 rounded-md">{trip.suggestions?.hotels?.length || 0} Hotels</span>
+                                                                </div>
+                                                            </div>
+                                                        </Card>
+                                                    </motion.div>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div className="flex flex-col items-center justify-center space-y-6 text-center py-10">
+                                                <div className="bg-slate-50 p-8 rounded-full ring-1 ring-slate-100">
+                                                    <Map className="w-12 h-12 text-slate-300" />
+                                                </div>
+                                                <div className="space-y-2 max-w-sm">
+                                                    <h3 className="text-xl font-bold text-slate-900">No active plans found</h3>
+                                                    <p className="text-slate-500 font-medium leading-relaxed">
+                                                        Head over to the New Trip in the Chat Page to start planning your next adventure and see it here.
+                                                    </p>
+                                                </div>
+                                                <button
+                                                    onClick={() => navigate('/chat')}
+                                                    className="px-8 py-3 bg-sky-600 text-white font-bold rounded-2xl hover:bg-sky-700 transition shadow-lg shadow-sky-100 active:scale-95"
+                                                >
+                                                    Plan a Trip
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 </Card>
                             ) : (
@@ -363,7 +385,7 @@ const Bookings = () => {
                                                                 <h4 className="font-bold text-slate-900">{booking.title}</h4>
                                                                 <div className="flex items-center gap-2">
                                                                     <span className="text-xs font-bold text-slate-500 bg-slate-200/50 px-2 py-1 rounded">PNR: {booking.pnr}</span>
-                                                                    <button 
+                                                                    <button
                                                                         onClick={() => deleteBooking(booking.id)}
                                                                         className="p-1.5 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
                                                                     >

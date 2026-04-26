@@ -380,34 +380,54 @@ export default function Explore() {
         </aside>
 
         {/* MAIN SECTION */}
-        <main style={{ flex: 1, minWidth: 0 }}>
+        <main style={{ flex: 1, minWidth: 0, height: "calc(100vh - 80px)" }}>
           {activeTab === "discovery" && (
-            <div className="bg-white/60 backdrop-blur-xl rounded-[40px] border border-white shadow-xl p-8 min-h-[600px]">
-              <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
-                <div style={{ background: "#fff", padding: "14px 24px", borderRadius: 20, display: "flex", alignItems: "center", gap: 14, boxShadow: "0 8px 30px rgba(0,0,0,0.04)", border: "1px solid #f1f5f9" }}>
-                  <Icon name="search" size={20} color="#94a3b8" />
-                  <input
-                    type="text"
-                    placeholder="Search romantic sunset spots, museum near Day 2..."
-                    style={{ border: "none", outline: "none", flex: 1, fontSize: 15, fontWeight: 600, color: "#1e293b", background: "transparent" }}
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                  />
-                  <button style={{ background: "#0f172a", color: "#fff", padding: "10px 24px", borderRadius: 14, fontSize: 13, fontWeight: 800, display: "flex", alignItems: "center", gap: 8, transition: "all 0.2s", boxShadow: "0 4px 12px rgba(15, 23, 42, 0.15)" }} className="hover:bg-slate-800 active:scale-95">
-                    <Filter size={16} /> Refine
-                  </button>
+            <div className="bg-white/60 backdrop-blur-xl rounded-[40px] border border-white shadow-xl h-full flex flex-col overflow-hidden">
+              <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+                {/* FIXED SEARCH BAR */}
+                <div style={{
+                  padding: "32px 32px 20px 32px",
+                  background: "rgba(255,255,255,0.4)",
+                  borderBottom: "1px solid rgba(241, 245, 249, 0.5)",
+                  zIndex: 50
+                }}>
+                  <div style={{
+                    background: "#fff",
+                    padding: "14px 24px",
+                    borderRadius: 20,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 14,
+                    boxShadow: "0 8px 30px rgba(0,0,0,0.06)",
+                    border: "1px solid #f1f5f9"
+                  }}>
+                    <Icon name="search" size={20} color="#94a3b8" />
+                    <input
+                      type="text"
+                      placeholder="Search romantic sunset spots, museum near Day 2..."
+                      style={{ border: "none", outline: "none", flex: 1, fontSize: 15, fontWeight: 600, color: "#1e293b", background: "transparent" }}
+                      value={search}
+                      onChange={e => setSearch(e.target.value)}
+                    />
+                    <button style={{ background: "#0f172a", color: "#fff", padding: "10px 24px", borderRadius: 14, fontSize: 13, fontWeight: 800, display: "flex", alignItems: "center", gap: 8, transition: "all 0.2s", boxShadow: "0 4px 12px rgba(15, 23, 42, 0.15)" }} className="hover:bg-slate-800 active:scale-95">
+                      <Filter size={16} /> Refine
+                    </button>
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-                  {filtered.map(place => (
-                    <PlaceCard
-                      key={place.id}
-                      place={place}
-                      liked={likedCards.has(place.id)}
-                      onLike={toggleLike}
-                      onOpen={openReel}
-                    />
-                  ))}
+                {/* INTERNAL SCROLLABLE CONTENT */}
+                <div className="flex-1 overflow-y-auto no-scrollbar p-8 pt-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                    {filtered.map(place => (
+                      <PlaceCard
+                        key={place.id}
+                        place={place}
+                        liked={likedCards.has(place.id)}
+                        onLike={toggleLike}
+                        onOpen={openReel}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -415,8 +435,8 @@ export default function Explore() {
 
 
           {activeTab === "stories" && (
-            <div className="bg-white/80 backdrop-blur-xl rounded-[40px] overflow-hidden shadow-2xl border border-white/50">
-              <div className="max-h-[85vh] overflow-y-auto no-scrollbar">
+            <div className="bg-white/80 backdrop-blur-xl rounded-[40px] overflow-hidden shadow-2xl border border-white/50 h-full">
+              <div className="h-full overflow-y-auto no-scrollbar">
                 <ParallaxHero isEmbedded={true} />
                 <div className="px-8">
                   <MoodGrid />

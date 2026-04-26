@@ -562,7 +562,7 @@ export default function Chat() {
         {
           id: Date.now() + 3,
           from: "bot",
-          text: `Error: ${err.message}. Please check if the backend is running and the database is connected.`,
+          text: "I'm having trouble connecting to the travel engine. Please try again in a few seconds.",
         },
       ]);
     } finally {
