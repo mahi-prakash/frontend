@@ -103,9 +103,9 @@ const MainLayout = () => {
             <NavLink to="/profile" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
               <div className="hidden xl:block text-right">
                 <p className="text-sm font-bold text-slate-900 leading-tight">
-                  Guest Traveler
+                  {user?.user_metadata?.full_name || "Guest Traveler"}
                 </p>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">View Profile</p>
+
               </div>
               <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-slate-100 overflow-hidden ring-2 ring-white shadow-sm">
                 <img
@@ -184,7 +184,9 @@ const MainLayout = () => {
                       />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-slate-900 leading-tight">Guest Traveler</p>
+                      <p className="text-sm font-bold text-slate-900 leading-tight">
+                        {user?.user_metadata?.full_name || "Guest Traveler"}
+                      </p>
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Signed in</p>
                     </div>
                   </NavLink>

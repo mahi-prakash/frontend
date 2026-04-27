@@ -18,21 +18,30 @@ const Bookings = lazy(() => import("./pages/Bookings"));
 const ComingSoon = lazy(() => import("./pages/ComingSoon"));
 const MainLayout = lazy(() => import("./layouts/MainLayout"));
 
+import { useUser } from "./context/UserContext";
+
+const ProtectedRoute = ({ children }) => {
+  const { user, loading } = useUser();
+  if (loading) return <div className="min-h-screen bg-white" />;
+  if (!user) return <Navigate to="/" replace />;
+  return children;
+};
+
 const App = () => {
   return (
     <>
       <Suspense fallback={<div className="min-h-screen bg-slate-50" />}>
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/auth" element={<Auth />} />
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/coming-soon" element={<ComingSoon />} />
-          <Route element={<MainLayout />}>
+          <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
             <Route path="/explore" element={<Explore />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/bookings" element={<Bookings />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/planner/:tripId?" element={<Planner />} />
-
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

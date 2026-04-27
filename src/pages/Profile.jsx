@@ -1131,15 +1131,15 @@ const ProfileDashboard = ({ user }) => {
 const ProfileWrapper = () => {
   const { user } = useUser();
   const mockUser = {
-    navName: user?.name || "Guest Explorer",
+    navName: user?.user_metadata?.full_name || "Guest Explorer",
     navAvatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100&auto=format&fit=crop",
     coverImage: "https://images.unsplash.com/photo-1503220317375-aaad61436b1b?q=80&w=1200&auto=format&fit=crop",
     avatarImage: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=300&auto=format&fit=crop",
-    profileName: user?.name || "Guest Explorer",
+    profileName: user?.user_metadata?.full_name || "Guest Explorer",
     location: "Global Nomad",
     joinedDate: "Joined April 2026",
     email: user?.email || "guest@example.com",
-    vibe: user?.personalityTag || "Modern Nomad",
+    vibe: "Modern Nomad",
     stats: {
       tripsPlanned: 12,
       placesSaved: 48,

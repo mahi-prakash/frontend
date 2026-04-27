@@ -333,7 +333,7 @@ const ExperienceCarousel = () => {
 
 const Landing = () => {
   const navigate = useNavigate();
-  const { token, user } = useUser();
+  const { user, loginWithGoogle, loading } = useUser();
   const [isTransitioning, setIsTransitioning] = useState(false);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -344,17 +344,19 @@ const Landing = () => {
     mouseY.set(clientY - top);
   }
 
-
   // If already logged in, redirect to app automatically
   useEffect(() => {
-    // MVP: No automatic redirection based on auth
-  }, [navigate]);
+    if (user && !loading) {
+      navigate("/chat");
+    }
+  }, [user, loading, navigate]);
 
-
-
-
-  const handleGoToAuth = () => {
-    navigate("/chat");
+  const handleGoToAuth = async () => {
+    if (user) {
+      navigate("/chat");
+    } else {
+      navigate("/auth");
+    }
   };
 
 

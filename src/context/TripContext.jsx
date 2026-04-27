@@ -1,46 +1,51 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { fetchPhoto } from "../utils/unsplash";
+import { supabase } from "../utils/supabase";
+import { useUser } from "./UserContext";
 
 const TripContext = createContext(null);
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-
 export const TripProvider = ({ children }) => {
-  // 🏛️ STATE
-  const [trips, setTrips] = useState(() => {
-    const saved = sessionStorage.getItem("trips");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const [activeTripId, setActiveTripId] = useState(() => {
-    return sessionStorage.getItem("activeTripId") || null;
-  });
-
-  const [loading, setLoading] = useState(false);
+  const { user } = useUser();
+  const [trips, setTrips] = useState([]);
+  const [activeTripId, setActiveTripId] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [itineraryCache, setItineraryCache] = useState({});
 
-  // 🗺️ PERSISTENT ITINERARY CACHE
-  const [itineraryCache, setItineraryCache] = useState(() => {
-    const saved = sessionStorage.getItem("itineraryCache");
-    return saved ? JSON.parse(saved) : {};
-  });
-
-  // Sync state to storage
+  // 🔄 Fetch Trip from Supabase on Login
   useEffect(() => {
-    sessionStorage.setItem("trips", JSON.stringify(trips));
-  }, [trips]);
-
-  useEffect(() => {
-    sessionStorage.setItem("itineraryCache", JSON.stringify(itineraryCache));
-  }, [itineraryCache]);
-
-  useEffect(() => {
-    if (activeTripId) {
-      sessionStorage.setItem("activeTripId", activeTripId);
+    if (user) {
+      fetchTrips();
     } else {
-      sessionStorage.removeItem("activeTripId");
+      setTrips([]);
+      setActiveTripId(null);
+      setItineraryCache({});
     }
-  }, [activeTripId]);
+  }, [user]);
+
+  const fetchTrips = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('trips')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error("Error fetching trips:", error);
+    } else {
+      setTrips(data || []);
+      if (data && data.length > 0) {
+        setActiveTripId(data[0].id);
+        const cache = {};
+        data.forEach(t => {
+          if (t.itinerary) cache[t.id] = t.itinerary;
+        });
+        setItineraryCache(cache);
+      }
+    }
+    setLoading(false);
+  };
 
   const enhanceItineraryWithImages = async (itineraryData) => {
     if (!itineraryData?.days) return itineraryData;
@@ -75,53 +80,112 @@ export const TripProvider = ({ children }) => {
   };
 
   const createTrip = async (payload) => {
-    const newTrip = {
-      ...payload,
-      id: `trip-${Date.now()}`,
-      created_at: new Date().toISOString(),
-    };
+    if (!user) return null;
 
-    setTrips((prev) => [newTrip, ...prev]);
-    setActiveTripId(newTrip.id);
-    return newTrip;
-  };
+    try {
+      // 1. Delete existing trip for this user (will cascade delete messages)
+      await supabase
+        .from('trips')
+        .delete()
+        .eq('user_id', user.id);
 
-  const addItemToTrip = (tripId, dayId, item) => {
-    setItineraryCache(prev => {
-      const itinerary = prev[tripId] || { days: {} };
-      const newItinerary = JSON.parse(JSON.stringify(itinerary));
-
-      if (!newItinerary.days) newItinerary.days = {};
-      if (!newItinerary.days[dayId]) {
-        newItinerary.days[dayId] = {
-          id: dayId,
-          title: dayId.replace("day-", "Day "),
-          activities: []
-        };
-      }
-
-      const activities = newItinerary.days[dayId].activities || newItinerary.days[dayId].items || [];
-      const newItem = {
-        ...item,
-        id: `item-${Date.now()}`,
-        time: item.time
+      // 2. Insert brand new trip
+      const tripPayload = {
+        user_id: user.id,
+        title: payload.title,
+        destination: payload.destination,
+        start_date: payload.start_date,
+        end_date: payload.end_date,
+        image: payload.image,
+        itinerary: payload.itinerary || null,
+        updated_at: new Date().toISOString()
       };
 
-      newItinerary.days[dayId].activities = [...activities, newItem];
-      return { ...prev, [tripId]: newItinerary };
-    });
+      const { data, error } = await supabase
+        .from('trips')
+        .insert(tripPayload)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setTrips([data]);
+      setActiveTripId(data.id);
+      if (data.itinerary) {
+        setItineraryCache(prev => ({ ...prev, [data.id]: data.itinerary }));
+      }
+      return data;
+    } catch (error) {
+      console.error("Error creating fresh trip:", error);
+      return null;
+    }
+  };
+
+  const updateTrip = async (id, payload) => {
+    const { data, error } = await supabase
+      .from('trips')
+      .update(payload)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error updating trip:", error);
+      return;
+    }
+
+    setTrips(prev => prev.map(t => t.id === id ? data : t));
+    if (data.itinerary) {
+      setItineraryCache(prev => ({ ...prev, [id]: data.itinerary }));
+    }
+  };
+
+  const addItemToTrip = async (tripId, dayId, item) => {
+    const itinerary = itineraryCache[tripId] || { days: {} };
+    const newItinerary = JSON.parse(JSON.stringify(itinerary));
+
+    if (!newItinerary.days) newItinerary.days = {};
+    if (!newItinerary.days[dayId]) {
+      newItinerary.days[dayId] = {
+        id: dayId,
+        title: dayId.replace("day-", "Day "),
+        activities: []
+      };
+    }
+
+    const activities = newItinerary.days[dayId].activities || newItinerary.days[dayId].items || [];
+    const newItem = {
+      ...item,
+      id: `item-${Date.now()}`,
+      time: item.time
+    };
+
+    newItinerary.days[dayId].activities = [...activities, newItem];
+    
+    await updateTrip(tripId, { itinerary: newItinerary });
   };
 
   const saveItineraryToCache = (id, itinerary) => {
     if (!id) return;
     setItineraryCache(prev => ({ ...prev, [id]: itinerary }));
+    updateTrip(id, { itinerary });
   };
 
   const setActiveTrip = (tripId) => {
     setActiveTripId(tripId || null);
   };
 
-  const deleteTrip = (tripId) => {
+  const deleteTrip = async (tripId) => {
+    const { error } = await supabase
+      .from('trips')
+      .delete()
+      .eq('id', tripId);
+
+    if (error) {
+      console.error("Error deleting trip:", error);
+      return;
+    }
+
     setTrips(prev => prev.filter(t => t.id !== tripId));
     setItineraryCache(prev => {
       const newCache = { ...prev };
@@ -130,14 +194,6 @@ export const TripProvider = ({ children }) => {
     });
     if (activeTripId === tripId) {
       setActiveTripId(null);
-    }
-  };
-
-  const updateTrip = (id, payload) => {
-    setTrips(prev => prev.map(t => t.id === id ? { ...t, ...payload } : t));
-    if (payload.itinerary || payload.ai_itinerary) {
-      const itin = payload.itinerary || payload.ai_itinerary;
-      setItineraryCache(prev => ({ ...prev, [id]: itin }));
     }
   };
 
@@ -152,14 +208,14 @@ export const TripProvider = ({ children }) => {
         loading,
         createTrip,
         setActiveTrip,
-        fetchTrips: () => { }, // No-op in MVP
+        fetchTrips,
         itineraryCache,
         saveItineraryToCache,
         addItemToTrip,
         deleteTrip,
         updateTrip,
         updateTripItinerary: (id, itin) => updateTrip(id, { itinerary: itin }),
-        updateAiItinerary: (id, itin) => updateTrip(id, { ai_itinerary: itin }),
+        updateAiItinerary: (id, itin) => updateTrip(id, { itinerary: itin }),
         isGenerating,
         setIsGenerating,
         enhanceItineraryWithImages

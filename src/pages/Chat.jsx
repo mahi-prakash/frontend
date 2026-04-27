@@ -21,7 +21,7 @@ import Dropdown from "../components/common/Dropdown";
 import { useJsApiLoader } from "@react-google-maps/api";
 import { fetchPhoto } from "../utils/unsplash";
 import { GOOGLE_MAPS_API_KEY } from "../utils/googleMaps";
-
+import { supabase } from "../utils/supabase";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -29,8 +29,8 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 export default function Chat() {
   const navigate = useNavigate();
-  const { token, user } = useUser();
-  const userName = user?.name?.split(" ")[0] || "Adventurer";
+  const { user, loginWithGoogle, loading: authLoading } = useUser();
+  const userName = user?.user_metadata?.full_name?.split(" ")[0] || user?.email?.split("@")[0] || "Adventurer";
   const {
     trips: realTrips,
     activeTripId: realActiveTripId,
@@ -182,32 +182,30 @@ export default function Chat() {
 
   // ── Fetch messages for a trip ──────────────────────────────────────────────
   const fetchMessages = async (tripId) => {
-    if (!token || !tripId) return;
+    if (!user || !tripId) return;
 
     try {
-      // In MVP, we don't fetch messages from backend, they are in localStorage
+      const { data, error } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('trip_id', tripId)
+        .order('created_at', { ascending: false })
+        .limit(50);
 
-      const current = tripData[tripId];
-      if (current?.messages) {
-        setTripData(prev => ({
-          ...prev,
-          [tripId]: { ...prev[tripId], messagesFetched: true }
-        }));
-        return;
-      }
-      const data = await res.json();
+      if (error) throw error;
+
+      // Reverse to maintain chronological order in UI
+      const sortedData = (data || []).reverse();
 
       let recoveredItinerary = null;
 
-      // Map and Clean
-      const messages = (data.messages || []).map(msg => {
+      const messages = sortedData.map(msg => {
         const from = msg.role === 'user' ? 'user' : 'bot';
         let text = msg.content;
 
         // 🔍 RECOVERY & CLEANUP LOGIC
         if (from === "bot") {
           try {
-            // 1. Try to extract itinerary data for recovery
             const raw = text.match(/\[ITINERARY\]([\s\S]*?)\[\/ITINERARY\]/i)?.[1] ||
               text.match(/\{[\s\S]*"days"[\s\S]*\}/i)?.[0];
 
@@ -215,9 +213,8 @@ export default function Chat() {
               const parsed = JSON.parse(raw);
               if (parsed.days) recoveredItinerary = parsed;
             }
-          } catch (e) { /* ignore parse error for recovery */ }
+          } catch (e) { }
 
-          // 2. ALWAYS Clean the text for display, regardless of parsing success
           text = text
             .replace(/\[ITINERARY\][\s\S]*?\[\/ITINERARY\]/gi, "")
             .replace(/\[[\w\s]+Itinerary\][\s\S]*?(\{[\s\S]*\})/gi, "")
@@ -228,19 +225,7 @@ export default function Chat() {
         return { id: msg.id, from, text, createdAt: msg.created_at };
       });
 
-      // 🔥 LOADING GUARD: Wait for trips to be available before deciding to recover
-      if (loading && (!realTrips || realTrips.length === 0)) {
-        return;
-      }
-
-      // 🔥 PRIORITY CHECK: If DB already has a plan, don't overwrite it with recovered history
-      const tripInList = (realTrips || []).find(t => t.id === tripId);
-      const hasDbItinerary = tripInList?.itinerary?.days &&
-        (Array.isArray(tripInList.itinerary.days) ? tripInList.itinerary.days.length > 0 : Object.keys(tripInList.itinerary.days).length > 0);
-
-      if (hasDbItinerary) {
-        recoveredItinerary = tripInList.itinerary;
-      } else if (recoveredItinerary) {
+      if (recoveredItinerary) {
         try {
           recoveredItinerary = await enhanceItineraryWithImages(recoveredItinerary);
         } catch (e) { console.error("Recovery Image Enhancement failed", e); }
@@ -479,11 +464,25 @@ export default function Chat() {
       return;
     }
 
+    // 🔥 SAVE USER MESSAGE TO SUPABASE
     try {
+      await supabase.from('messages').insert({
+        trip_id: tripId,
+        user_id: user.id,
+        content: text,
+        role: 'user'
+      });
+    } catch (e) { console.error("User message save failed", e); }
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+
       const res = await fetch(`${API_URL}/messages`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
           tripId: tripId,
@@ -503,6 +502,16 @@ export default function Chat() {
 
       const data = await res.json();
       const reply = data.reply || "";
+
+      // 🔥 SAVE BOT REPLY TO SUPABASE
+      try {
+        await supabase.from('messages').insert({
+          trip_id: tripId,
+          user_id: user.id,
+          content: reply,
+          role: 'assistant'
+        });
+      } catch (e) { console.error("Bot message save failed", e); }
 
       let parsedItinerary = null;
 
@@ -728,6 +737,46 @@ export default function Chat() {
       ...itineraryDays.map((d, i) => `Day ${getDayNumber(d, i)}`),
     ]
     : ["All days"];
+
+  // ── Authentication Guard ──────────────────────────────────────────────────
+  if (authLoading) {
+    return (
+      <div className="h-screen w-full flex items-center justify-center bg-white">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          className="w-10 h-10 border-4 border-sky-500 border-t-transparent rounded-full"
+        />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="h-screen w-full flex flex-col items-center justify-center bg-slate-50 p-6">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="max-w-md w-full bg-white rounded-[32px] p-8 shadow-xl text-center space-y-6"
+        >
+          <div className="w-20 h-20 bg-sky-50 rounded-3xl flex items-center justify-center mx-auto mb-2">
+            <Sparkles className="text-sky-600 w-10 h-10" />
+          </div>
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Ready for your next story?</h1>
+          <p className="text-slate-500 text-lg leading-relaxed">
+            Login with Google to start planning your perfect adventure. We'll save everything for you.
+          </p>
+          <button
+            onClick={loginWithGoogle}
+            className="w-full py-4 px-6 bg-slate-900 text-white rounded-2xl font-bold text-lg hover:bg-slate-800 transition-all flex items-center justify-center gap-3 shadow-lg hover:shadow-xl active:scale-95"
+          >
+            <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5" />
+            Continue with Google
+          </button>
+        </motion.div>
+      </div>
+    );
+  }
 
   // ─────────────────────────────────────────────────────────────────────────
   return (
