@@ -7,14 +7,18 @@ import "./index.css";
 import { UserProvider } from "./context/UserContext";
 import { TripProvider } from "./context/TripContext";
 
+import { HelmetProvider } from "react-helmet-async";
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <UserProvider>
-        <TripProvider>
-          <App />
-        </TripProvider>
-      </UserProvider>
-    </BrowserRouter>
+    <HelmetProvider>
+      <BrowserRouter>
+        <UserProvider>
+          <TripProvider>
+            <App />
+          </TripProvider>
+        </UserProvider>
+      </BrowserRouter>
+    </HelmetProvider>
   </React.StrictMode>
 );

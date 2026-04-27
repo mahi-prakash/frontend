@@ -4,9 +4,10 @@ import ParallaxHero from "../components/stories/ParallaxHero";
 import MoodGrid from "../components/stories/MoodGrid";
 import FeaturedNarrative from "../components/stories/FeaturedNarrative";
 import TravelReels from "../components/stories/TravelReels";
-import Newsletter from "../components/stories/Newsletter";
+
 import Footer from "../components/stories/Footer";
 import SectionSpacer from "../components/stories/SectionSpacer";
+import SEO from "../components/common/SEO";
 import {
   Search, Grid, Music, BookOpen, Heart,
   MapPin, Star, Filter, ChevronRight, X, Check, ArrowLeft
@@ -296,12 +297,18 @@ export default function Explore() {
   });
 
   return (
-    <div style={{ fontFamily: "'Segoe UI', system-ui, sans-serif", background: "#f0eff0", minHeight: "100vh", color: "#1a1a1a" }}>
+    <div style={{ fontFamily: "'Segoe UI', system-ui, sans-serif", background: "#f0eff0", minHeight: "100vh", color: "#1a1a1a", overflowX: "hidden" }}>
+      <SEO 
+        title="Explore Destinations"
+        url="/explore"
+        description="Discover romantic sunset spots, hidden museums, and the best cafes around the world. Browse travel reels and stories from global explorers."
+        keywords="explore travel, travel destinations, travel reels, travel stories, vacation ideas"
+      />
       {/* PAGE */}
-      <div className="flex flex-col lg:flex-row gap-8 px-4 sm:px-6 lg:px-[5%] py-4 lg:py-8 min-h-[calc(100vh-58px)] items-start max-w-[1800px] mx-auto">
+      <div className="flex flex-col lg:flex-row gap-4 sm:gap-8 px-2 sm:px-4 lg:px-[5%] py-4 lg:py-8 min-h-[calc(100vh-58px)] items-start max-w-[1800px] mx-auto overflow-hidden">
         {/* SIDEBAR */}
         <aside className="bg-white rounded-2xl p-6 w-full lg:w-[240px] flex-shrink-0 flex flex-col gap-5 h-fit lg:sticky lg:top-4">
-          <div style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.5px", display: "flex", alignItems: "center", justifyContent: "space-between", color: "#0f172a" }}>
+          <h1 style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.5px", display: "flex", alignItems: "center", justifyContent: "space-between", color: "#0f172a", margin: 0 }}>
             EXPLORE
             <div style={{ width: 32, height: 32, borderRadius: 10, background: "#f8fafc", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", border: "1px solid #f1f5f9" }}>
               <Icon name="grid" size={14} color="#64748b" />
@@ -378,9 +385,9 @@ export default function Explore() {
         </aside>
 
         {/* MAIN SECTION */}
-        <main style={{ flex: 1, minWidth: 0, height: "calc(100vh - 80px)" }}>
+        <main style={{ flex: 1, minWidth: 0 }} className="h-auto lg:h-[calc(100vh-120px)] w-full max-w-full overflow-hidden">
           {activeTab === "discovery" && (
-            <div className="bg-white/60 backdrop-blur-xl rounded-[40px] border border-white shadow-xl h-full flex flex-col overflow-hidden">
+            <div className="bg-white/60 backdrop-blur-xl rounded-[20px] sm:rounded-[40px] border border-white shadow-xl h-full flex flex-col overflow-hidden">
               <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
                 {/* FIXED SEARCH BAR */}
                 <div className="p-6 sm:p-8 pb-5 bg-white/40 border-b border-slate-100/50 z-50">
@@ -419,17 +426,16 @@ export default function Explore() {
 
 
           {activeTab === "stories" && (
-            <div className="bg-white/80 backdrop-blur-xl rounded-[40px] overflow-hidden shadow-2xl border border-white/50 h-full">
-              <div className="h-full overflow-y-auto no-scrollbar">
+            <div className="bg-white/80 backdrop-blur-xl rounded-[20px] sm:rounded-[40px] overflow-hidden shadow-2xl border border-white/50 w-full max-w-full h-full">
+              <div className="h-full overflow-y-auto overflow-x-hidden no-scrollbar">
                 <ParallaxHero isEmbedded={true} />
-                <div className="px-8">
+                <div className="overflow-x-hidden">
                   <MoodGrid />
                   <SectionSpacer />
                   <FeaturedNarrative />
                   <SectionSpacer />
                   <TravelReels />
                   <SectionSpacer />
-                  <Newsletter />
                   <Footer />
                 </div>
               </div>
@@ -437,7 +443,7 @@ export default function Explore() {
           )}
 
           {activeTab === "reels" && (
-            <div className="relative flex flex-col items-center justify-center py-20 px-8 text-center bg-white/60 backdrop-blur-xl rounded-[40px] border border-white shadow-xl min-h-[600px]">
+            <div className="relative flex flex-col items-center justify-center py-12 sm:py-20 px-4 sm:px-8 text-center bg-white/60 backdrop-blur-xl rounded-[20px] sm:rounded-[40px] border border-white shadow-xl min-h-[400px] sm:min-h-[600px]">
               {/* Back Arrow */}
               <button
                 onClick={() => setActiveTab("discovery")}

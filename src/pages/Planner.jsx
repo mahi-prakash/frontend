@@ -55,6 +55,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTrip } from '../context/TripContext';
 import { useUser } from '../context/UserContext';
 import Dropdown from '../components/common/Dropdown';
+import SEO from '../components/common/SEO';
 import { GOOGLE_MAPS_API_KEY } from '../utils/googleMaps';
 
 const containerStyle = {
@@ -850,6 +851,12 @@ export default function Planner() {
 
   return (
     <div className="min-h-screen lg:h-[calc(100vh-20px)] bg-slate-50 font-sans grid grid-cols-1 lg:grid-cols-[450px_1fr_400px] gap-6 p-4 sm:p-6 overflow-y-auto lg:overflow-hidden no-scrollbar">
+      <SEO 
+        title="Trip Planner"
+        url="/planner"
+        description="Organize your travel itinerary with our interactive trip planner. Drag and drop activities, view routes on the map, and manage your daily travel schedule effortlessly."
+        keywords="trip planner, travel itinerary, travel map, trip organizer, vacation planner"
+      />
 
       <DragDropContext onDragEnd={onDragEnd}>
 

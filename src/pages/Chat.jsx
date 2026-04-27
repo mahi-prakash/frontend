@@ -18,6 +18,7 @@ import CircleLogo from "../pages/CircleLogo.png";
 import { useTrip } from "../context/TripContext";
 import { api } from "../services/api";
 import Dropdown from "../components/common/Dropdown";
+import SEO from "../components/common/SEO";
 import { useJsApiLoader } from "@react-google-maps/api";
 import { fetchPhoto } from "../utils/unsplash";
 import { GOOGLE_MAPS_API_KEY } from "../utils/googleMaps";
@@ -786,6 +787,12 @@ export default function Chat() {
       transition={{ duration: 0.35, ease: "easeOut" }}
       className="h-full w-full bg-white flex flex-col"
     >
+      <SEO 
+        title="AI Travel Assistant"
+        url="/chat"
+        description="Chat with our AI travel expert to build persona-driven itineraries, find hidden gems, and plan your perfect trip in seconds."
+        keywords="AI travel assistant, travel chat, itinerary builder, trip planning AI"
+      />
       {/* ── Markdown Styles ── */}
       <style>{`
         .prose p { margin-bottom: 0.75rem; }
@@ -1192,19 +1199,19 @@ export default function Chat() {
               </div>
 
               {/* Input */}
-              <form onSubmit={handleSend} className="px-10 pb-8">
-                <div className="flex items-center gap-3 bg-sky-50 rounded-full px-6 py-3 shadow-inner">
+              <form onSubmit={handleSend} className="px-4 sm:px-10 pb-4 sm:pb-8">
+                <div className="flex items-center gap-2 sm:gap-3 bg-sky-50 rounded-full px-4 sm:px-6 py-2.5 sm:py-3 shadow-inner">
                   <input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Describe your vibe"
                     disabled={!activeTripId || isSending}
-                    className="flex-1 bg-transparent outline-none text-sm disabled:opacity-50"
+                    className="flex-1 min-w-0 bg-transparent outline-none text-sm disabled:opacity-50"
                   />
                   <button
                     type="submit"
                     disabled={!input.trim() || isSending}
-                    className="h-9 w-9 rounded-full bg-slate-900 text-white flex items-center justify-center disabled:opacity-40"
+                    className="h-9 w-9 shrink-0 rounded-full bg-slate-900 text-white flex items-center justify-center disabled:opacity-40"
                   >
                     <Send size={18} />
                   </button>

@@ -3,11 +3,11 @@ import Footer from "./Footer";
 export default function Newsletter() {
   return (
     <section
-      className="py-24 px-6 lg:px-12 max-w-[1440px] mx-auto"
+      className="py-8 sm:py-16 px-4 sm:px-6 lg:px-10"
       id="newsletter"
       aria-label="Newsletter signup"
     >
-      <div className="rounded-[32px] bg-gradient-to-br from-slate-900 via-slate-900 to-sky-900/40 border border-slate-700 shadow-[0_32px_80px_-40px_rgba(15,23,42,0.9)] px-6 md:px-10 py-12 lg:py-16 relative overflow-hidden">
+      <div className="rounded-[24px] sm:rounded-[32px] bg-gradient-to-br from-slate-900 via-slate-900 to-sky-900/40 border border-slate-700 shadow-[0_32px_80px_-40px_rgba(15,23,42,0.9)] px-4 sm:px-6 md:px-10 py-10 sm:py-12 lg:py-16 relative overflow-hidden">
         {/* Subtle accent glow */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-sky-500/10 blur-[100px] rounded-full pointer-events-none" />
 
@@ -16,7 +16,7 @@ export default function Newsletter() {
             <span className="text-[11px] font-semibold tracking-[0.25em] uppercase text-sky-400 mb-6 block">
               STAY IN THE LOOP
             </span>
-            <h2 className="text-4xl lg:text-5xl font-black text-white tracking-tight mb-6">
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight mb-4 sm:mb-6">
               Be first in line for new vibes.
             </h2>
             <p className="text-base lg:text-lg text-slate-300 mb-10 leading-relaxed font-medium">
