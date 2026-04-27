@@ -308,7 +308,7 @@ export default function Explore() {
       <div className="flex flex-col lg:flex-row gap-4 sm:gap-8 px-2 sm:px-4 lg:px-[5%] py-4 lg:py-8 min-h-[calc(100vh-58px)] items-start max-w-[1800px] mx-auto overflow-hidden">
         {/* SIDEBAR */}
         <aside className="bg-white rounded-2xl p-6 w-full lg:w-[240px] flex-shrink-0 flex flex-col gap-5 h-fit lg:sticky lg:top-4">
-          <div style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.5px", display: "flex", alignItems: "center", justifyContent: "space-between", color: "#0f172a" }}>
+          <h1 style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.5px", display: "flex", alignItems: "center", justifyContent: "space-between", color: "#0f172a", margin: 0 }}>
             EXPLORE
             <div style={{ width: 32, height: 32, borderRadius: 10, background: "#f8fafc", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", border: "1px solid #f1f5f9" }}>
               <Icon name="grid" size={14} color="#64748b" />
