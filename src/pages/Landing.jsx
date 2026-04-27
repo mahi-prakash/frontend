@@ -8,6 +8,7 @@ import { useUser } from "../context/UserContext";
 import Card from "../components/common/Card";
 import WhatYouCanDoCarousel from "../components/Landing/WhatYouCanDoCarousel";
 import TransitionOverlay from "../components/Landing/TransitionOverlay";
+import SEO from "../components/common/SEO";
 
 
 const heroPlaces = [
@@ -361,6 +362,11 @@ const Landing = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-slate-50 to-sky-100">
+      <SEO 
+        url="/"
+        description="The anti-boring travel planner. AI-curated vibes, hidden gems, and chaotic-good itineraries for the modern nomad."
+        keywords="AI travel planner, travel itineraries, trip planning, modern nomad, hidden gems"
+      />
       {/* Header */}
       <header className="px-4 sm:px-6 pt-4 sm:pt-6 flex items-center justify-between container mx-auto gap-3">
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">

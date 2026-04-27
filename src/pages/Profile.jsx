@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from "framer-motion";
 import { Plane, Bookmark, Award, Globe, Pen, Camera, Globe2, MapPin, Calendar, ClipboardList, Plus, Heart, Settings, ShieldCheck, ChevronRight, BookOpen, Sun, Utensils, Compass, Send } from "lucide-react";
 import { useUser } from "../context/UserContext";
+import SEO from "../components/common/SEO";
 import Planner from './Planner';
 
 const ProfileDashboard = ({ user }) => {
@@ -53,6 +54,12 @@ const ProfileDashboard = ({ user }) => {
 
   return (
     <div className="dashboard-wrapper">
+      <SEO 
+        title="Travel Dashboard"
+        url="/profile"
+        description="View your travel stats, upcoming trips, bucket list, and digital memories. Your personal command center for all things travel."
+        keywords="travel dashboard, user profile, travel stats, bucket list, travel memories"
+      />
       <style>{`
         :root {
             --primary-blue: #0081C9;

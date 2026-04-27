@@ -7,6 +7,7 @@ import TravelReels from "../components/stories/TravelReels";
 
 import Footer from "../components/stories/Footer";
 import SectionSpacer from "../components/stories/SectionSpacer";
+import SEO from "../components/common/SEO";
 import {
   Search, Grid, Music, BookOpen, Heart,
   MapPin, Star, Filter, ChevronRight, X, Check, ArrowLeft
@@ -297,6 +298,12 @@ export default function Explore() {
 
   return (
     <div style={{ fontFamily: "'Segoe UI', system-ui, sans-serif", background: "#f0eff0", minHeight: "100vh", color: "#1a1a1a", overflowX: "hidden" }}>
+      <SEO 
+        title="Explore Destinations"
+        url="/explore"
+        description="Discover romantic sunset spots, hidden museums, and the best cafes around the world. Browse travel reels and stories from global explorers."
+        keywords="explore travel, travel destinations, travel reels, travel stories, vacation ideas"
+      />
       {/* PAGE */}
       <div className="flex flex-col lg:flex-row gap-4 sm:gap-8 px-2 sm:px-4 lg:px-[5%] py-4 lg:py-8 min-h-[calc(100vh-58px)] items-start max-w-[1800px] mx-auto overflow-hidden">
         {/* SIDEBAR */}

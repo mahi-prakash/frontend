@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Card from "../components/common/Card";
 import { Plane, Hotel, Car, Calendar, Sparkles, Map, ArrowLeft, Star, MapPin, Search, ChevronDown, Clock, Bed, Ticket, Trash2 } from "lucide-react";
+import SEO from "../components/common/SEO";
 
 import { useTrip } from "../context/TripContext";
 import { api } from "../services/api";
@@ -101,6 +102,12 @@ const Bookings = () => {
 
     return (
         <div className="bg-slate-50/50 min-h-full">
+            <SEO 
+                title="Your Bookings"
+                url="/bookings"
+                description="Manage all your travel bookings in one place. Track flights, hotels, and local transport reservations for your upcoming adventures."
+                keywords="travel bookings, manage reservations, travel dashboard, flight tracking, hotel management"
+            />
             <div className="max-w-[1400px] mx-auto px-4 sm:px-10 lg:px-20 pt-6 pb-8 space-y-6 sm:space-y-8">
                 {/* Header Section */}
                 <div className="flex flex-col items-center justify-center space-y-6">

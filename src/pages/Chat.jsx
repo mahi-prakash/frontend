@@ -18,6 +18,7 @@ import CircleLogo from "../pages/CircleLogo.png";
 import { useTrip } from "../context/TripContext";
 import { api } from "../services/api";
 import Dropdown from "../components/common/Dropdown";
+import SEO from "../components/common/SEO";
 import { useJsApiLoader } from "@react-google-maps/api";
 import { fetchPhoto } from "../utils/unsplash";
 import { GOOGLE_MAPS_API_KEY } from "../utils/googleMaps";
@@ -737,6 +738,12 @@ export default function Chat() {
       transition={{ duration: 0.35, ease: "easeOut" }}
       className="h-full w-full bg-white flex flex-col"
     >
+      <SEO 
+        title="AI Travel Assistant"
+        url="/chat"
+        description="Chat with our AI travel expert to build persona-driven itineraries, find hidden gems, and plan your perfect trip in seconds."
+        keywords="AI travel assistant, travel chat, itinerary builder, trip planning AI"
+      />
       {/* ── Markdown Styles ── */}
       <style>{`
         .prose p { margin-bottom: 0.75rem; }
