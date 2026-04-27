@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Outlet, useLocation, NavLink } from "react-router-dom";
+import { Outlet, useLocation, NavLink, useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import { LogOut, ChevronDown, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -12,6 +12,7 @@ const MainLayout = () => {
   const isFullWidthPage = location.pathname === "/chat" || location.pathname.startsWith("/planner") || location.pathname === "/profile" || location.pathname === "/bookings" || location.pathname === "/explore";
   const { user, logout } = useUser();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   // Automatically close the menu when the route changes
   useEffect(() => {
@@ -147,34 +148,29 @@ const MainLayout = () => {
                   <ul className="space-y-4">
                     {navItems.map((item) => (
                       <li key={item.to}>
-                        <NavLink
-                          to={item.to}
+                        <button
                           onClick={() => {
-                            // Adding a slight delay prevents the unmount animation 
-                            // from blocking the React Router link navigation
-                            setTimeout(() => setIsMenuOpen(false), 150);
+                            navigate(item.to);
                           }}
-                          className={({ isActive }) =>
-                            `flex items-center gap-4 p-4 rounded-2xl text-base font-bold transition-all ${isActive
+                          className={`w-full flex items-center gap-4 p-4 rounded-2xl text-base font-bold transition-all ${
+                            location.pathname === item.to
                               ? "bg-sky-50 text-sky-600 shadow-sm border border-sky-100"
                               : "text-slate-600 hover:bg-slate-50"
-                            }`
-                          }
+                          }`}
                         >
                           {item.label}
-                        </NavLink>
+                        </button>
                       </li>
                     ))}
                   </ul>
                 </nav>
 
                 <div className="mt-auto pt-6 border-t border-slate-100">
-                  <NavLink
-                    to="/profile"
+                  <button
                     onClick={() => {
-                      setTimeout(() => setIsMenuOpen(false), 150);
+                      navigate('/profile');
                     }}
-                    className="flex items-center gap-3 p-2 rounded-2xl hover:bg-slate-50 transition-colors"
+                    className="w-full flex items-center gap-3 p-2 rounded-2xl hover:bg-slate-50 transition-colors"
                   >
                     <div className="h-10 w-10 rounded-xl bg-slate-100 overflow-hidden ring-2 ring-white shadow-sm shrink-0">
                       <img
@@ -183,11 +179,11 @@ const MainLayout = () => {
                         className="h-full w-full object-cover"
                       />
                     </div>
-                    <div>
+                    <div className="text-left">
                       <p className="text-sm font-bold text-slate-900 leading-tight">Guest Traveler</p>
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Signed in</p>
                     </div>
-                  </NavLink>
+                  </button>
                 </div>
               </motion.div>
             </>

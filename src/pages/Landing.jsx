@@ -362,17 +362,17 @@ const Landing = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-slate-50 to-sky-100">
       {/* Header */}
-      <header className="px-6 pt-6 flex items-center justify-between container mx-auto">
-        <div className="flex items-center gap-3">
-          <span className="px-3 py-1 rounded-full border border-sky-500/30 bg-sky-500/10 text-sky-600 text-[10px] font-bold tracking-[0.25em] uppercase shadow-sm">
+      <header className="px-4 sm:px-6 pt-4 sm:pt-6 flex items-center justify-between container mx-auto gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <span className="px-2 sm:px-3 py-1 rounded-full border border-sky-500/30 bg-sky-500/10 text-sky-600 text-[9px] sm:text-[10px] font-bold tracking-[0.25em] uppercase shadow-sm whitespace-nowrap shrink-0">
             BETA V2.0
           </span>
-          <span className="text-slate-500 text-xs md:text-sm font-medium">
+          <span className="text-slate-500 text-xs md:text-sm font-medium hidden sm:inline">
             The new standard.
           </span>
         </div>
-        <div className="absolute top-0 right-0 mt-2 mr-6">
-          <button onClick={handleGoToAuth} className="px-6 py-2 text-sm font-medium text-slate-900 bg-white rounded-full border border-slate-200 hover:bg-slate-50 transition-all duration-200">
+        <div className="shrink-0">
+          <button onClick={handleGoToAuth} className="px-4 sm:px-6 py-2 text-xs sm:text-sm font-medium text-slate-900 bg-white rounded-full border border-slate-200 hover:bg-slate-50 transition-all duration-200 whitespace-nowrap">
             Log in or Sign up
           </button>
         </div>
@@ -705,7 +705,7 @@ const Landing = () => {
             </div>
 
             <div className="mt-6 pt-3 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500">
-              <p>© {new Date().getFullYear()} Trap. All rights reserved.</p>
+              <p>© 2026 The Travstory. All rights reserved.</p>
               <div className="flex gap-4">
                 <a href="/coming-soon" className="hover:text-slate-300 cursor-pointer">Privacy</a>
                 <a href="/coming-soon" className="hover:text-slate-300 cursor-pointer">Terms</a>

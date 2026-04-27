@@ -1143,19 +1143,19 @@ export default function Chat() {
               </div>
 
               {/* Input */}
-              <form onSubmit={handleSend} className="px-10 pb-8">
-                <div className="flex items-center gap-3 bg-sky-50 rounded-full px-6 py-3 shadow-inner">
+              <form onSubmit={handleSend} className="px-4 sm:px-10 pb-4 sm:pb-8">
+                <div className="flex items-center gap-2 sm:gap-3 bg-sky-50 rounded-full px-4 sm:px-6 py-2.5 sm:py-3 shadow-inner">
                   <input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Describe your vibe"
                     disabled={!activeTripId || isSending}
-                    className="flex-1 bg-transparent outline-none text-sm disabled:opacity-50"
+                    className="flex-1 min-w-0 bg-transparent outline-none text-sm disabled:opacity-50"
                   />
                   <button
                     type="submit"
                     disabled={!input.trim() || isSending}
-                    className="h-9 w-9 rounded-full bg-slate-900 text-white flex items-center justify-center disabled:opacity-40"
+                    className="h-9 w-9 shrink-0 rounded-full bg-slate-900 text-white flex items-center justify-center disabled:opacity-40"
                   >
                     <Send size={18} />
                   </button>

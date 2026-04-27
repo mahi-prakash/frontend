@@ -58,7 +58,7 @@ function ReelCard({ reel }) {
 
   return (
     <div
-      className="group relative w-[260px] md:w-[280px] aspect-[9/16] shrink-0 rounded-[32px] overflow-hidden bg-white shadow-xl shadow-slate-200/80 snap-start cursor-pointer border border-slate-200 p-2 transition-all duration-500 hover:scale-[1.03] hover:shadow-2xl hover:shadow-sky-500/20"
+      className="group relative w-[200px] sm:w-[260px] md:w-[280px] aspect-[9/16] shrink-0 rounded-[24px] sm:rounded-[32px] overflow-hidden bg-white shadow-xl shadow-slate-200/80 snap-start cursor-pointer border border-slate-200 p-1.5 sm:p-2 transition-all duration-500 hover:scale-[1.03] hover:shadow-2xl hover:shadow-sky-500/20"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -133,7 +133,7 @@ const cardVariants = {
 export default function TravelReels() {
   return (
     <section
-      className="py-24 px-6 lg:px-12 max-w-[1440px] mx-auto bg-slate-50/50"
+      className="py-8 sm:py-16 px-4 sm:px-6 lg:px-10 bg-slate-50/50"
       id="reels"
       aria-label="2026 Travel Reels"
     >
@@ -148,7 +148,7 @@ export default function TravelReels() {
           <p className="text-[11px] font-bold tracking-[0.25em] uppercase text-sky-500 drop-shadow-sm">
             IN MOTION
           </p>
-          <h2 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
             Reels From the Road
           </h2>
           <p className="text-sm md:text-base text-slate-600 max-w-xl mt-2 font-medium">

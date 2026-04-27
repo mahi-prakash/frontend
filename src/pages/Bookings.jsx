@@ -101,20 +101,20 @@ const Bookings = () => {
 
     return (
         <div className="bg-slate-50/50 min-h-full">
-            <div className="max-w-[1400px] mx-auto px-10 sm:px-16 lg:px-20 pt-6 pb-8 space-y-8">
+            <div className="max-w-[1400px] mx-auto px-4 sm:px-10 lg:px-20 pt-6 pb-8 space-y-6 sm:space-y-8">
                 {/* Header Section */}
                 <div className="flex flex-col items-center justify-center space-y-6">
                     <div className="text-center space-y-2">
-                        <h1 className="text-4xl font-bold text-slate-900 tracking-tight">Your Bookings</h1>
+                        <h1 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">Your Bookings</h1>
                     </div>
 
                     {/* Tab Switcher */}
-                    <div className="flex items-center justify-center space-x-8 border-b border-slate-200 w-full max-w-2xl mx-auto">
+                    <div className="flex items-center justify-center gap-4 sm:gap-8 border-b border-slate-200 w-full max-w-2xl mx-auto overflow-x-auto no-scrollbar">
                         {tabs.map((tab) => (
                             <button
                                 key={tab}
                                 onClick={() => handleTabChange(tab)}
-                                className={`relative pb-3 text-sm font-medium transition-colors duration-300 ${activeTab === tab
+                                className={`relative pb-3 text-xs sm:text-sm font-medium transition-colors duration-300 whitespace-nowrap ${activeTab === tab
                                     ? "text-sky-600"
                                     : "text-slate-500 hover:text-slate-700"
                                     }`}
@@ -146,7 +146,7 @@ const Bookings = () => {
                             transition={{ duration: 0.2 }}
                         >
                             {!selectedTrip ? (
-                                <Card className="mx-14 p-8 min-h-[400px] border border-slate-100 shadow-xl bg-white rounded-[32px]">
+                                <Card className="mx-0 sm:mx-4 lg:mx-14 p-4 sm:p-8 min-h-[400px] border border-slate-100 shadow-xl bg-white rounded-[24px] sm:rounded-[32px] overflow-hidden">
                                     <div className="mb-6">
                                         <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
                                             <Sparkles className="w-5 h-5 text-sky-500" />
@@ -197,7 +197,7 @@ const Bookings = () => {
                                                     <Map className="w-12 h-12 text-slate-300" />
                                                 </div>
                                                 <div className="space-y-2 max-w-sm">
-                                                    <h3 className="text-xl font-bold text-slate-900">No active plans found</h3>
+                                                    <h3 className="text-lg sm:text-xl font-bold text-slate-900">No active plans found</h3>
                                                     <p className="text-slate-500 font-medium leading-relaxed">
                                                         Head over to the New Trip in the Chat Page to start planning your next adventure and see it here.
                                                     </p>
@@ -270,7 +270,7 @@ const Bookings = () => {
                             transition={{ duration: 0.2 }}
                             className="space-y-8"
                         >
-                            <Card className="mx-14 mt-10 p-12 flex flex-col items-center justify-center text-center space-y-6 min-h-[400px] border-dashed border-2 border-slate-200 bg-sky-50/20 rounded-[32px]">
+                            <Card className="mx-0 sm:mx-4 lg:mx-14 mt-4 sm:mt-10 p-6 sm:p-12 flex flex-col items-center justify-center text-center space-y-6 min-h-[400px] border-dashed border-2 border-slate-200 bg-sky-50/20 rounded-[24px] sm:rounded-[32px]">
                                 <div className="bg-white p-6 rounded-full shadow-md ring-1 ring-sky-100 ">
                                     <Search className="w-12 h-12 text-[#0081C9]" />
                                 </div>
@@ -295,7 +295,7 @@ const Bookings = () => {
                             transition={{ duration: 0.2 }}
                             className="space-y-8 max-w-4xl mx-auto"
                         >
-                            <Card className="p-8 border border-slate-200 shadow-xl bg-white rounded-[32px]">
+                            <Card className="p-4 sm:p-8 border border-slate-200 shadow-xl bg-white rounded-[24px] sm:rounded-[32px]">
                                 <div className="mb-6">
                                     <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
                                         <Ticket className="w-6 h-6 text-sky-500" />
@@ -329,38 +329,38 @@ const Bookings = () => {
                                     }}
                                 >
                                     {/* Type Selection */}
-                                    <div className="flex gap-4">
+                                    <div className="flex gap-2 sm:gap-4">
                                         {['Flights', 'Trains', 'Hotels'].map(type => (
                                             <button
                                                 key={type}
                                                 type="button"
                                                 onClick={() => setBookingType(type)}
-                                                className={`flex-1 py-3 px-4 rounded-xl border-2 font-bold transition-all flex items-center justify-center gap-2 ${bookingType === type
+                                                className={`flex-1 py-2.5 sm:py-3 px-2 sm:px-4 rounded-xl border-2 font-bold transition-all flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm ${bookingType === type
                                                     ? 'border-sky-500 bg-sky-50 text-sky-700'
                                                     : 'border-slate-100 text-slate-500 hover:border-slate-200'
                                                     }`}
                                             >
-                                                {type === 'Flights' && <Plane className="w-4 h-4" />}
-                                                {type === 'Trains' && <Ticket className="w-4 h-4" />}
-                                                {type === 'Hotels' && <Hotel className="w-4 h-4" />}
+                                                {type === 'Flights' && <Plane className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+                                                {type === 'Trains' && <Ticket className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+                                                {type === 'Hotels' && <Hotel className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
                                                 {type}
                                             </button>
                                         ))}
                                     </div>
 
                                     {/* Input Field */}
-                                    <div className="flex gap-4">
+                                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                                         <input
                                             type="text"
                                             value={pnrInput}
                                             onChange={(e) => setPnrInput(e.target.value)}
                                             placeholder={bookingType === 'Trains' ? "Enter 10-digit PNR Number" : "Enter Booking ID or Reference"}
-                                            className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
+                                            className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-medium text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
                                             required
                                         />
                                         <button
                                             type="submit"
-                                            className="px-8 py-3 bg-sky-500 text-white font-bold rounded-xl hover:bg-sky-600 transition shadow-lg shadow-sky-100 active:scale-95"
+                                            className="px-6 sm:px-8 py-3 bg-sky-500 text-white font-bold rounded-xl hover:bg-sky-600 transition shadow-lg shadow-sky-100 active:scale-95 whitespace-nowrap shrink-0"
                                         >
                                             Save Details
                                         </button>
@@ -375,16 +375,16 @@ const Bookings = () => {
                                             {savedBookings.map(booking => {
                                                 const BookingIcon = ICON_MAP[booking.iconName] || Ticket;
                                                 return (
-                                                    <div key={booking.id} className="p-4 rounded-2xl border border-slate-100 bg-slate-50/50 flex items-center gap-4">
-                                                        <div className={`w-12 h-12 rounded-full bg-${booking.color}-100 text-${booking.color}-600 flex items-center justify-center shrink-0`}>
-                                                            <BookingIcon className="w-6 h-6" />
+                                    <div key={booking.id} className="p-3 sm:p-4 rounded-2xl border border-slate-100 bg-slate-50/50 flex items-start sm:items-center gap-3 sm:gap-4">
+                                                        <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center shrink-0`}>
+                                                            <BookingIcon className="w-5 h-5 sm:w-6 sm:h-6" />
                                                         </div>
 
-                                                        <div className="flex-1">
-                                                            <div className="flex justify-between items-start mb-1">
-                                                                <h4 className="font-bold text-slate-900">{booking.title}</h4>
-                                                                <div className="flex items-center gap-2">
-                                                                    <span className="text-xs font-bold text-slate-500 bg-slate-200/50 px-2 py-1 rounded">PNR: {booking.pnr}</span>
+                                                        <div className="flex-1 min-w-0">
+                                                            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-1 gap-1">
+                                                                <h4 className="font-bold text-slate-900 text-sm sm:text-base truncate">{booking.title}</h4>
+                                                                <div className="flex items-center gap-2 shrink-0">
+                                                                    <span className="text-[10px] sm:text-xs font-bold text-slate-500 bg-slate-200/50 px-2 py-0.5 sm:py-1 rounded">PNR: {booking.pnr}</span>
                                                                     <button
                                                                         onClick={() => deleteBooking(booking.id)}
                                                                         className="p-1.5 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"

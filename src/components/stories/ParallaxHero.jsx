@@ -19,12 +19,12 @@ export default function ParallaxHero({ isEmbedded = false }) {
 
   if (isEmbedded) {
     return (
-      <div className="relative w-full py-20 bg-white rounded-3xl overflow-hidden shadow-sm">
-        <div className="text-center max-w-7xl mx-auto px-6 flex flex-col items-center justify-center">
+      <div className="relative w-full py-10 sm:py-20 bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm">
+        <div className="text-center max-w-7xl mx-auto px-4 sm:px-6 flex flex-col items-center justify-center">
           <div className="text-[10px] font-bold tracking-[0.2em] uppercase text-sky-500 mb-2">
             The New Standard
           </div>
-          <h2 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tighter mb-4">
+          <h2 className="text-2xl sm:text-4xl md:text-6xl font-black text-slate-900 tracking-tighter mb-4">
             THE TRAVSTORY
           </h2>
           <span className="px-4 py-1.5 bg-sky-500/10 border border-sky-500/20 text-sky-600 rounded-full text-[9px] font-bold tracking-widest uppercase">
@@ -32,18 +32,18 @@ export default function ParallaxHero({ isEmbedded = false }) {
           </span>
         </div>
         
-        <div className="mt-12 grid grid-cols-2 gap-4 px-6 max-w-5xl mx-auto">
-          <div className="rounded-2xl overflow-hidden border border-slate-100 shadow-lg">
-            <img src={dubaiImg} alt="Dubai" className="w-full h-48 object-cover" />
+        <div className="mt-6 sm:mt-12 grid grid-cols-2 gap-2 sm:gap-4 px-3 sm:px-6 max-w-5xl mx-auto">
+          <div className="rounded-xl sm:rounded-2xl overflow-hidden border border-slate-100 shadow-lg">
+            <img src={dubaiImg} alt="Dubai" className="w-full h-28 sm:h-48 object-cover" />
           </div>
-          <div className="rounded-2xl overflow-hidden border border-slate-100 shadow-lg">
-            <img src={explorerImg} alt="Explorer" className="w-full h-48 object-cover" />
+          <div className="rounded-xl sm:rounded-2xl overflow-hidden border border-slate-100 shadow-lg">
+            <img src={explorerImg} alt="Explorer" className="w-full h-28 sm:h-48 object-cover" />
           </div>
         </div>
 
-        <div className="mt-8 px-6 max-w-5xl mx-auto">
-          <div className="rounded-3xl overflow-hidden shadow-xl border border-slate-100">
-            <img src={hawaMahalImg} alt="Hawa Mahal" className="w-full h-64 object-cover" />
+        <div className="mt-4 sm:mt-8 px-3 sm:px-6 max-w-5xl mx-auto">
+          <div className="rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl border border-slate-100">
+            <img src={hawaMahalImg} alt="Hawa Mahal" className="w-full h-36 sm:h-64 object-cover" />
           </div>
         </div>
       </div>
