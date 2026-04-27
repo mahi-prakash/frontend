@@ -179,15 +179,10 @@ const MainLayout = () => {
                         className="h-full w-full object-cover"
                       />
                     </div>
-<<<<<<< main
                     <div>
                       <p className="text-sm font-bold text-slate-900 leading-tight">
                         {user?.user_metadata?.full_name || "Guest Traveler"}
                       </p>
-=======
-                    <div className="text-left">
-                      <p className="text-sm font-bold text-slate-900 leading-tight">Guest Traveler</p>
->>>>>>> main
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Signed in</p>
                     </div>
                   </button>
