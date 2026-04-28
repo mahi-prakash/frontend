@@ -201,6 +201,7 @@ const MainLayout = () => {
                       />
                     </div>
                     <div className="text-left">
+                    <div>
                       <p className="text-sm font-bold text-slate-900 leading-tight">
                         {user?.user_metadata?.full_name || "Guest Traveler"}
                       </p>
