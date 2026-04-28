@@ -313,7 +313,7 @@ export default function Explore() {
             <div style={{ width: 32, height: 32, borderRadius: 10, background: "#f8fafc", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", border: "1px solid #f1f5f9" }}>
               <Icon name="grid" size={14} color="#64748b" />
             </div>
-          </div>
+          </h1>
 
           <div>
             <div style={{ fontSize: 10, fontWeight: 900, color: "#94a3b8", letterSpacing: "1.5px", marginBottom: 14 }}>CATEGORY</div>

@@ -22,8 +22,10 @@ import { useUser } from "./context/UserContext";
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useUser();
+
   if (loading) return <div className="min-h-screen bg-white" />;
   if (!user) return <Navigate to="/" replace />;
+  
   return children;
 };
 
@@ -34,7 +36,6 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/auth" element={<Auth />} />
-          <Route path="/quiz" element={<Quiz />} />
           <Route path="/coming-soon" element={<ComingSoon />} />
           <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
             <Route path="/explore" element={<Explore />} />

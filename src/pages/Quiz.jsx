@@ -5,6 +5,7 @@ import { useUser } from "../context/UserContext";
 import Card from "../components/common/Card";
 import Button from "../components/common/Button";
 import { motion, AnimatePresence } from "framer-motion";
+import { supabase } from "../utils/supabase";
 
 const questions = [
   {
@@ -112,15 +113,32 @@ const Quiz = () => {
     }
   };
 
+  const { user, refreshProfile } = useUser();
   const handleSubmit = async () => {
+    if (!user) return;
     setLoading(true);
     setError("");
 
-    // MVP: Simulate a delay then navigate
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          quiz_completed: true,
+          quiz_data: answers,
+          updated_at: new Date().toISOString()
+        })
+        .eq("id", user.id);
+
+      if (error) throw error;
+
+      await refreshProfile();
       navigate("/chat");
-    }, 800);
+    } catch (err) {
+      console.error("Quiz submission error:", err);
+      setError("Failed to save your preferences. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
 

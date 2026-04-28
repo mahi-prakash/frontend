@@ -101,21 +101,43 @@ const MainLayout = () => {
               {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
 
-            <NavLink to="/profile" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
-              <div className="hidden xl:block text-right">
-                <p className="text-sm font-bold text-slate-900 leading-tight">
-                  {user?.user_metadata?.full_name || "Guest Traveler"}
-                </p>
+            {/* PROFILE HOVER MENU */}
+            <div className="relative group pt-2 pb-2">
+              <div className="flex items-center gap-3 cursor-pointer">
+                <div className="hidden xl:block text-right">
+                  <p className="text-sm font-bold text-slate-900 leading-tight group-hover:text-sky-600 transition-colors">
+                    {user?.user_metadata?.full_name || "Guest Traveler"}
+                  </p>
+                </div>
+                <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-slate-100 overflow-hidden ring-2 ring-white shadow-sm group-hover:ring-sky-100 transition-all">
+                  <img
+                    src="https://plus.unsplash.com/premium_vector-1728560971513-32c0ac5e2c30?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0"
+                    alt="Profile"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <ChevronDown size={14} className="text-slate-400 group-hover:text-sky-600 transition-colors" />
+              </div>
 
+              {/* DROPDOWN MENU (Shows on hover) */}
+              <div className="absolute top-full right-0 mt-0 w-48 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-200 z-[110]">
+                <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 p-2 overflow-hidden">
+                  <button
+                    onClick={() => navigate("/profile")}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-600 hover:bg-slate-50 hover:text-sky-600 rounded-xl transition-colors"
+                  >
+                    View Profile
+                  </button>
+                  <button
+                    onClick={logout}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-slate-600 hover:bg-red-50 rounded-xl transition-colors mt-1"
+                  >
+                    <LogOut size={16} />
+                    Sign Out
+                  </button>
+                </div>
               </div>
-              <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl bg-slate-100 overflow-hidden ring-2 ring-white shadow-sm">
-                <img
-                  src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100&auto=format&fit=crop"
-                  alt="Profile"
-                  className="h-full w-full object-cover"
-                />
-              </div>
-            </NavLink>
+            </div>
           </div>
         </div>
 
@@ -152,11 +174,10 @@ const MainLayout = () => {
                           onClick={() => {
                             navigate(item.to);
                           }}
-                          className={`w-full flex items-center gap-4 p-4 rounded-2xl text-base font-bold transition-all ${
-                            location.pathname === item.to
-                              ? "bg-sky-50 text-sky-600 shadow-sm border border-sky-100"
-                              : "text-slate-600 hover:bg-slate-50"
-                          }`}
+                          className={`w-full flex items-center gap-4 p-4 rounded-2xl text-base font-bold transition-all ${location.pathname === item.to
+                            ? "bg-sky-50 text-sky-600 shadow-sm border border-sky-100"
+                            : "text-slate-600 hover:bg-slate-50"
+                            }`}
                         >
                           {item.label}
                         </button>
@@ -165,7 +186,7 @@ const MainLayout = () => {
                   </ul>
                 </nav>
 
-                <div className="mt-auto pt-6 border-t border-slate-100">
+                <div className="mt-auto pt-6 border-t border-slate-100 space-y-4">
                   <button
                     onClick={() => {
                       navigate('/profile');
@@ -174,22 +195,25 @@ const MainLayout = () => {
                   >
                     <div className="h-10 w-10 rounded-xl bg-slate-100 overflow-hidden ring-2 ring-white shadow-sm shrink-0">
                       <img
-                        src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100&auto=format&fit=crop"
+                        src="https://plus.unsplash.com/premium_vector-1728560971513-32c0ac5e2c30?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0"
                         alt="Profile"
                         className="h-full w-full object-cover"
                       />
                     </div>
-<<<<<<< main
-                    <div>
+                    <div className="text-left">
                       <p className="text-sm font-bold text-slate-900 leading-tight">
                         {user?.user_metadata?.full_name || "Guest Traveler"}
                       </p>
-=======
-                    <div className="text-left">
-                      <p className="text-sm font-bold text-slate-900 leading-tight">Guest Traveler</p>
->>>>>>> main
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Signed in</p>
                     </div>
+                  </button>
+
+                  <button
+                    onClick={logout}
+                    className="w-full flex items-center gap-3 p-4 rounded-2xl bg-red-50 text-red-600 font-bold hover:bg-red-100 transition-colors"
+                  >
+                    <LogOut size={20} />
+                    <span>Sign Out</span>
                   </button>
                 </div>
               </motion.div>

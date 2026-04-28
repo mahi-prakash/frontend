@@ -8,18 +8,62 @@ export const UserProvider = ({ children }) => {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [profile, setProfile] = useState(null);
+
+  const syncProfile = async (currentUser) => {
+    if (!currentUser) {
+      setProfile(null);
+      return;
+    }
+
+    try {
+      // 1. Try to fetch existing profile
+      const { data: existingProfile, error: fetchError } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", currentUser.id)
+        .single();
+
+      if (existingProfile) {
+        setProfile(existingProfile);
+        return;
+      }
+
+      // 2. If not exists, create it
+      const { data: newProfile, error: insertError } = await supabase
+        .from("profiles")
+        .insert({
+          id: currentUser.id,
+          email: currentUser.email,
+          full_name: currentUser.user_metadata?.full_name || "Adventurer",
+          avatar_url: currentUser.user_metadata?.avatar_url
+        })
+        .select("*")
+        .single();
+
+      if (insertError) throw insertError;
+      setProfile(newProfile);
+    } catch (err) {
+      console.error("Profile sync error:", err);
+    }
+  };
+
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      setUser(session?.user ?? null);
+      const currentUser = session?.user ?? null;
+      setUser(currentUser);
+      syncProfile(currentUser);
       setLoading(false);
     });
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      setUser(session?.user ?? null);
+      const currentUser = session?.user ?? null;
+      setUser(currentUser);
+      syncProfile(currentUser);
       setLoading(false);
     });
 
@@ -27,10 +71,15 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   const loginWithGoogle = async () => {
+    // Determine the redirect URL (Local vs Production)
+    const redirectUrl = window.location.origin.includes('localhost') 
+      ? window.location.origin 
+      : 'https://www.thetravstory.com';
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: window.location.origin,
+        redirectTo: redirectUrl,
       },
     });
     if (error) throw error;
@@ -45,13 +94,15 @@ export const UserProvider = ({ children }) => {
     <UserContext.Provider
       value={{
         user,
+        profile,
         session,
         token: session?.access_token,
         loading,
         loginWithGoogle,
         logout,
         setUser,
-        // Compatibility with existing code
+        refreshProfile: () => syncProfile(user),
+        // Personality tag is now a static default
         personalityTag: "Adventurer", 
       }}
     >

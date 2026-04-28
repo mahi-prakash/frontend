@@ -7,18 +7,14 @@ import { useUser } from "../context/UserContext";
 
 const Auth = () => {
   const navigate = useNavigate();
-  const { loginWithGoogle, user, loading: authLoading } = useUser();
+  const { loginWithGoogle, user, profile, loading: authLoading } = useUser();
 
   // If already logged in, redirect to app automatically
   React.useEffect(() => {
-    if (user && !authLoading) {
-      if (user.quiz_completed) {
-        navigate("/chat");
-      } else {
-        navigate("/quiz");
-      }
+    if (user && profile && !authLoading) {
+      navigate("/chat");
     }
-  }, [user, authLoading, navigate]);
+  }, [user, profile, authLoading, navigate]);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -116,17 +112,8 @@ const Auth = () => {
               </div>
             </div>
 
-            <div className="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-              <p className="text-xs md:text-sm text-slate-500">
-                New here?{" "}
-                <span
-                  className="text-sky-600 font-semibold cursor-pointer"
-                  onClick={() => navigate("/quiz")}
-                >
-                  Get your vibe first
-                </span>
-              </p>
-              <p className="text-[11px] text-slate-400">No spam. Just trips.</p>
+            <div className="mt-8 pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-center gap-4 text-center">
+              <p className="text-[11px] text-slate-400">No spam. Just trips. Built for the modern nomad.</p>
             </div>
           </Card>
 
